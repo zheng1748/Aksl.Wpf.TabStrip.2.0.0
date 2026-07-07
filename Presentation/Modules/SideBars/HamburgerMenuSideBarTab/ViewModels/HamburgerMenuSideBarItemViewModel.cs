@@ -7,7 +7,6 @@ using Aksl.Tabs;
 using Aksl.Tabs.ViewModels;
 using Aksl.Tabs.Views;
 using Aksl.Toolkit.Controls;
-using Microsoft.VisualBasic;
 using Prism;
 using Prism.Events;
 using Prism.Ioc;
@@ -60,7 +59,6 @@ public class HamburgerMenuSideBarItemViewModel : NodeViewModel
 
     #region Properties
     public Aksl.Infrastructure.MenuItem MenuItem => _menuItem;
-    public string WorkspaceViewEventName { get; set; }
     public string NavigationName => _menuItem.NavigationName;
     public bool IsSelectedOnInitialize => _menuItem.IsSelectedOnInitialize;
     public PackIconKind IconKind =>
@@ -94,7 +92,7 @@ public class HamburgerMenuSideBarItemViewModel : NodeViewModel
 
     public bool IsPaneOpen
     {
-        get =>field;
+        get => field;
         set => SetProperty<bool>(ref field, value);
     } = true;
 
@@ -175,7 +173,7 @@ public class HamburgerMenuSideBarItemViewModel : NodeViewModel
             Title = menuItem.Title,
             IconKind = menuItem.IconKind,
             ViewName = menuItem.ViewName,
-            CloseTabButtonVisibility =  Visibility.Visible
+            CloseTabButtonVisibility = Visibility.Visible
         };
 
         var currentView = tabViewModel.GetStoreViewElementByName(menuItem.Name);
@@ -203,7 +201,7 @@ public class HamburgerMenuSideBarItemViewModel : NodeViewModel
             Name = menuItem.Name,
             Title = menuItem.Title,
             IconKind = menuItem.IconKind,
-            ViewName = menuItem.ViewName,  
+            ViewName = menuItem.ViewName,
             CloseTabButtonVisibility = Visibility.Collapsed
         };
 
@@ -212,17 +210,15 @@ public class HamburgerMenuSideBarItemViewModel : NodeViewModel
         {
             if (menuItem.IsCacheable)
             {
-                //tabViewModel.SetTabItemByByName(menuItem.Name);
             }
             else
             {
-                // tabViewModel.RetsetTabItem(topTabInfo);
                 tabViewModel.RetsetTabItemNoActive(tabInfo);
             }
         }
         else
         {
-            tabViewModel.Add(tabInfo);
+            tabViewModel.Add(tabInfo, false);
         }
     }
 
@@ -251,7 +247,6 @@ public class HamburgerMenuSideBarItemViewModel : NodeViewModel
                 else
                 {
                     // Debug.Assert(topTabItemViewModel.ViewElement == subTabView);
-
                     subTabViewModel = subTabView.DataContext as TabViewModel;
                 }
 

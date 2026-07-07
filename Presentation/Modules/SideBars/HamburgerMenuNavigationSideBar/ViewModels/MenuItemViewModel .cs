@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Unity;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
 {
     public class MenuItemViewModel : NodeViewModel
     {

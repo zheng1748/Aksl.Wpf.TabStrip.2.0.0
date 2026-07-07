@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media.Animation;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab
 {
     public class GridLengthAnimation : GridLengthAnimationBase
     {

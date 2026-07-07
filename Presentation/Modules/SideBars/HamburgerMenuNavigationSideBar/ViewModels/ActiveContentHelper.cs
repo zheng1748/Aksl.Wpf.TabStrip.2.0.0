@@ -21,7 +21,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Media3D;
 using Unity;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels;
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels;
 
 //public static class ActiveContentHelper
 //{

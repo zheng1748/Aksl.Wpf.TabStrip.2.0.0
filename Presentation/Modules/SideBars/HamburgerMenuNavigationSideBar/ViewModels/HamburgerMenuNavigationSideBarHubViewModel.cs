@@ -21,7 +21,7 @@ using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
 {
     public class HamburgerMenuNavigationSideBarHubViewModel : BindableBase, INavigationAware
     {

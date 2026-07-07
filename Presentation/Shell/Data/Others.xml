@@ -7,7 +7,7 @@
 			  Name="OrgChartTry"
 			  Title="OrgChart"
 			  Level="2"
-			  IsCacheable="False"
+			  IsCacheable="True"
 			  IconKind="OrganicOutline"
 			  ModuleName="OthersModule"
 		      ViewName="Aksl.Modules.Others.OrgChart.Views.OrgChartView,Aksl.Modules.Others"  >

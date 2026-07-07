@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Expand", "Expand", "{AE4A20
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tab", "Tab", "{E7A98A2A-5D30-4D24-9ACE-EFF21205479E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HamburgerMenuNavigationSideBar", "Presentation\Modules\SideBars\HamburgerMenuNavigationSideBar\HamburgerMenuNavigationSideBar.csproj", "{F4DDCCF7-E061-40D2-9A2C-F17908015023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HamburgerMenuNavigationSideBarTab", "Presentation\Modules\SideBars\HamburgerMenuNavigationSideBar\HamburgerMenuNavigationSideBarTab.csproj", "{F4DDCCF7-E061-40D2-9A2C-F17908015023}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HamburgerMenuTreeSideBar", "Presentation\Modules\SideBars\HamburgerMenuTreeSideBar\HamburgerMenuTreeSideBar.csproj", "{A8494862-3B3A-49E8-8494-9F370C48D0CF}"
 EndProject

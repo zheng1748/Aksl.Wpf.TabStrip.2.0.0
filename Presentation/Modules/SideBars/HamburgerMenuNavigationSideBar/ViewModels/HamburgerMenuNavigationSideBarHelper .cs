@@ -10,7 +10,7 @@ using Prism.Regions;
 using Prism.Unity;
 using Unity;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels;
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels;
 
 public static class HamburgerMenuNavigationSideBarHelper
 {

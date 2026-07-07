@@ -15,7 +15,7 @@ using Unity;
 using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
 {
     public class GroupedMenusViewModel : BindableBase
     {

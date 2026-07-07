@@ -8,6 +8,7 @@ using System;
 using System.Configuration;
 using System.Windows;
 using System.Windows.Input;
+using Unity;
 
 namespace Aksl.Tabs.ViewModels
 {
@@ -21,7 +22,7 @@ namespace Aksl.Tabs.ViewModels
         #region Constructors
         public TabItemViewModel(TabInformation tabInformation)
         {
-            _eventAggregator = (PrismApplication.Current as PrismApplicationBase).Container.Resolve<IEventAggregator>();
+            _eventAggregator = PrismIocExtensions.GetUnityContainer().Resolve<IEventAggregator>();
 
             _tabInformation = tabInformation;
 
@@ -37,7 +38,7 @@ namespace Aksl.Tabs.ViewModels
         public string Title => _tabInformation.Title;
         public string ViewName => _tabInformation.ViewName;
 
-        private Type _viewElementType = default;
+        private Type? _viewElementType = default;
         public Type ViewElementType
         {
             get
@@ -55,8 +56,8 @@ namespace Aksl.Tabs.ViewModels
             }
         }
 
-        private DependencyObject _viewElement = default;
-        public DependencyObject ViewElement
+        private DependencyObject? _viewElement = default;
+        public DependencyObject? ViewElement
         {
             get
             {
@@ -76,15 +77,14 @@ namespace Aksl.Tabs.ViewModels
             }
         }
 
-        private bool _isSelected = false;
         public bool IsSelected
         {
-            get => _isSelected;
+            get=> field;
             set
             {
-                if (SetProperty<bool>(ref _isSelected, value))
+                if (SetProperty<bool>(ref field, value))
                 {
-                    if (_isSelected)
+                    if (field)
                     {
                         _eventAggregator.GetEvent<OnActiveTabItemEvent>().Publish(new() {  SelectedTabInfo = _tabInformation });
                     }
@@ -92,23 +92,28 @@ namespace Aksl.Tabs.ViewModels
             }
         }
 
-        private Visibility _closeTabButtonVisibility= Visibility.Visible;
         public Visibility CloseTabButtonVisibility
         {
-            get => _closeTabButtonVisibility;
-            set => SetProperty<Visibility>(ref _closeTabButtonVisibility, value);
+            get => field;
+            set => SetProperty<Visibility>(ref field, value);
         }
         #endregion
 
         #region CloseTab Command
-        public event EventHandler RequestClose;
+        private event EventHandler _requestCloseEventHandler;
+        public event EventHandler RequestClose
+        {
+            add { _requestCloseEventHandler += value; }
+            remove { _requestCloseEventHandler -= value; }
+        }
+
         public ICommand ExecuteCloseTabCommand { get; private set; }
 
         private void CreateExecuteCloseTabCommand()
         {
             ExecuteCloseTabCommand = new DelegateCommand(() =>
             {
-                RequestClose?.Invoke(this, EventArgs.Empty);
+                _requestCloseEventHandler?.Invoke(this, EventArgs.Empty);
             },
             () =>
             {

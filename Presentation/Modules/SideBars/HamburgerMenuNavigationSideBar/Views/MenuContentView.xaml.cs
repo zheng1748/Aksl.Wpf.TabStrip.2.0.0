@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.Views
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views
 {
 
     public partial class MenuContentView : UserControl

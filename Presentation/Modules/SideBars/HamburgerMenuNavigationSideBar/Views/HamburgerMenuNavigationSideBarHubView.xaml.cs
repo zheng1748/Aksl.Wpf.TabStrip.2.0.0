@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.Views
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views
 {
     public partial class HamburgerMenuNavigationSideBarHubView : UserControl
     {

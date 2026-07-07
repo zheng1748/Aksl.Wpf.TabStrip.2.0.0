@@ -3,10 +3,10 @@ using Prism.Modularity;
 using Prism.Mvvm;
 using Unity;
 
-using Aksl.Modules.HamburgerMenuNavigationSideBar.Views;
-using Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels;
+using Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views;
+using Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab
 {
     public class HamburgerMenuNavigationSideBarModule : IModule
     {

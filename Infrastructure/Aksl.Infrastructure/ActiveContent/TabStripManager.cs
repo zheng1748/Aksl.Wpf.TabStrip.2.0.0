@@ -27,8 +27,8 @@ public class TabStripManager
     }
     #endregion
 
-    #region Create ContentInformation Method
-    public async Task<TabInformation> CreateContentInformationAsync(Infrastructure.MenuItem menuItem, NavigationParameters navigationParameters = null)
+    #region Create TabInformation Method
+    public async Task<TabInformation> CreateaTabInformationAsync(Infrastructure.MenuItem menuItem, NavigationParameters navigationParameters = null)
     {
         var viewName = menuItem.GetViewTypeName();
 
@@ -39,6 +39,7 @@ public class TabStripManager
         {
             Name = menuItem.Name,
             Title = menuItem.Title,
+            IconKind = menuItem.IconKind,
             ViewName = menuItem.ViewName,
         };
 

@@ -144,7 +144,7 @@ namespace Aksl.Modules.Shell.ViewModels
                     //{
                     //    Name = "HamburgerMenuNavigationSideBarHubView",
                     //    Title = "HamburgerMenuNavigationSideBarHubView",
-                    //    ViewName = "Aksl.Modules.HamburgerMenuNavigationSideBar.Views.HamburgerMenuNavigationSideBarHubView,Aksl.Modules.HamburgerMenuNavigationSideBar",
+                    //    ViewName = "Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views.HamburgerMenuNavigationSideBarHubView,Aksl.Modules.HamburgerMenuNavigationSideBarTab",
                     //    //ViewElement = new HamburgerMenuSideBarHubView()
                     //}, false);
 

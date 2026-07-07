@@ -2,7 +2,7 @@
 using System.Text;
 using System.Windows;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab
 {
     public static class TemplateSettings
     {

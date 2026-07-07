@@ -4,8 +4,8 @@
   <PropertyGroup>
 	  <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <AssemblyName>Aksl.Modules.HamburgerMenuNavigationSideBar</AssemblyName>
-    <RootNamespace>Aksl.Modules.HamburgerMenuNavigationSideBar</RootNamespace>
+    <AssemblyName>Aksl.Modules.HamburgerMenuNavigationSideBarTab</AssemblyName>
+    <RootNamespace>Aksl.Modules.HamburgerMenuNavigationSideBarTab</RootNamespace>
     <Authors>zheng ming</Authors>
 	<Company>Aksl</Company>
   </PropertyGroup>

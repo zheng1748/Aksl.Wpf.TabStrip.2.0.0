@@ -6,7 +6,7 @@ using Prism.Mvvm;
 using Aksl.Infrastructure;
 using Aksl.Toolkit.Controls;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
 {
     public class MenuItemHeaderViewModel : BindableBase
     {

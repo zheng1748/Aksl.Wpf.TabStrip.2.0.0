@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using Prism.Events;
 using Prism.Mvvm;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
 {
     public class MenuContentViewModel : BindableBase
     {

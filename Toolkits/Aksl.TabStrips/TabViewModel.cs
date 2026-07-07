@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Controls;
-
-using Prism;
+﻿using Prism;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Unity;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Controls;
+using Unity;
 
 namespace Aksl.Tabs.ViewModels
 {
@@ -22,11 +22,10 @@ namespace Aksl.Tabs.ViewModels
         #region Constructors
         public TabViewModel()
         {
-            _eventAggregator = (PrismApplication.Current as PrismApplicationBase).Container.Resolve<IEventAggregator>();
+            _eventAggregator = PrismIocExtensions.GetUnityContainer().Resolve<IEventAggregator>();
 
             ActiveTabItems = new();
             //AddCollectionChangedEventHandler();
-
             StoreTabItems = new();
         }
         #endregion
@@ -34,7 +33,7 @@ namespace Aksl.Tabs.ViewModels
         #region Properties
         public ObservableCollection<TabItemViewModel> ActiveTabItems { get; }
 
-        public TabItemViewModel SelectedTabItem
+        public TabItemViewModel? SelectedTabItem
         {
             get => field;
             set => SetProperty(ref field, value);
@@ -156,10 +155,15 @@ namespace Aksl.Tabs.ViewModels
 
         public void SetFirstActiveTabItem()
         {
-            if (StoreTabItems.Any())
+            if (ActiveTabItems.Any())
             {
-                var storeTabItemViewMode = StoreTabItems.First();
-                SelectedTabItem = storeTabItemViewMode;
+                var activeTabItem = ActiveTabItems.First();
+                SelectedTabItem = activeTabItem;
+            }
+            else if (StoreTabItems.Any())
+            {
+                var storeTabItem = StoreTabItems.First();
+                SelectedTabItem = storeTabItem;
             }
         }
 
@@ -199,10 +203,10 @@ namespace Aksl.Tabs.ViewModels
             }
             else
             {
-                var storeTabItemViewModel = GetStoreTabItemViewModelByInfo(tabInformation);
-                if (storeTabItemViewModel is not null)
+                var storeTabItem = GetStoreTabItemViewModelByInfo(tabInformation);
+                if (storeTabItem is not null)
                 {
-                    AddCore(storeTabItemViewModel);
+                    AddCore(storeTabItem);
                 }
             }
         }
@@ -216,10 +220,10 @@ namespace Aksl.Tabs.ViewModels
             }
             else
             {
-                var storeTabItemViewModel = GetStoreTabItemViewModelByName(name);
-                if (storeTabItemViewModel is not null)
+                var storeTabItem = GetStoreTabItemViewModelByName(name);
+                if (storeTabItem is not null)
                 {
-                    AddCore(storeTabItemViewModel);
+                    AddCore(storeTabItem);
                 }
             }
         }
@@ -240,20 +244,20 @@ namespace Aksl.Tabs.ViewModels
             }
             else
             {
-                var oldStoreTabItemViewModel = GetStoreTabItemViewModelByInfo(tabInformation);
-                if (oldStoreTabItemViewModel is not null)
+                var oldStoreTabItem = GetStoreTabItemViewModelByInfo(tabInformation);
+                if (oldStoreTabItem is not null)
                 {
-                    oldStoreTabItemViewModel.ViewElement = null;
+                    oldStoreTabItem.ViewElement = null;
 
                     if (tabInformation.ViewElement is not null)
                     {
-                        oldStoreTabItemViewModel.ViewElement = tabInformation.ViewElement;
+                        oldStoreTabItem.ViewElement = tabInformation.ViewElement;
                     }
 
-                    ActiveTabItems.Add(oldStoreTabItemViewModel);
-                    oldStoreTabItemViewModel.RequestClose += this.OnTabItemRequestClose;
+                    ActiveTabItems.Add(oldStoreTabItem);
+                    oldStoreTabItem.RequestClose += this.OnTabItemRequestClose;
 
-                    SetActiveTabItem(oldStoreTabItemViewModel);
+                    SetActiveTabItem(oldStoreTabItem);
                 }
             }
         }
@@ -272,78 +276,78 @@ namespace Aksl.Tabs.ViewModels
             }
             else
             {
-                var oldStoreTabItemViewModel = GetStoreTabItemViewModelByInfo(tabInformation);
-                if (oldStoreTabItemViewModel is not null)
+                var oldStoreTabItem = GetStoreTabItemViewModelByInfo(tabInformation);
+                if (oldStoreTabItem is not null)
                 {
-                    oldStoreTabItemViewModel.ViewElement = null;
+                    oldStoreTabItem.ViewElement = null;
 
                     if (tabInformation.ViewElement is not null)
                     {
-                        oldStoreTabItemViewModel.ViewElement = tabInformation.ViewElement;
+                        oldStoreTabItem.ViewElement = tabInformation.ViewElement;
                     }
 
-                    ActiveTabItems.Add(oldStoreTabItemViewModel);
-                    oldStoreTabItemViewModel.RequestClose += this.OnTabItemRequestClose;
+                    ActiveTabItems.Add(oldStoreTabItem);
+                    oldStoreTabItem.RequestClose += this.OnTabItemRequestClose;
                 }
             }
         }
 
-        private TabItemViewModel GetActiveTabItemViewModelByInfo(TabInformation tabInformation)
+        private TabItemViewModel? GetActiveTabItemViewModelByInfo(TabInformation tabInformation)
         {
-            var activeTabItemViewModel = ActiveTabItems.FirstOrDefault(ti => IsEqualsNameOrTitle(ti.Name, tabInformation.Name) || IsEqualsNameOrTitle(ti.Title, tabInformation.Title));
+            var activeTabItem = ActiveTabItems.FirstOrDefault(ti => IsEqualsNameOrTitle(ti.Name, tabInformation.Name) || IsEqualsNameOrTitle(ti.Title, tabInformation.Title));
 
-            return activeTabItemViewModel;
+            return activeTabItem;
         }
 
         private TabItemViewModel GetActiveTabItemViewModelByName(string name)
         {
-            var activeTabItemViewModel = ActiveTabItems.FirstOrDefault(ti => IsEqualsNameOrTitle(ti.Name, name) || IsEqualsNameOrTitle(ti.Title, name));
+            var activeTabItem = ActiveTabItems.FirstOrDefault(ti => IsEqualsNameOrTitle(ti.Name, name) || IsEqualsNameOrTitle(ti.Title, name));
 
-            return activeTabItemViewModel;
+            return activeTabItem;
         }
 
-        public TabItemViewModel GetStoreTabItemViewModelByInfo(TabInformation tabInformation)
+        public TabItemViewModel? GetStoreTabItemViewModelByInfo(TabInformation tabInformation)
         {
-            var storeTabItemViewModel = StoreTabItems.FirstOrDefault(sti => IsEqualsNameOrTitle(sti.Name, tabInformation.Name) || IsEqualsNameOrTitle(sti.Title, tabInformation.Title));
+            var storeTabItem = StoreTabItems.FirstOrDefault(sti => IsEqualsNameOrTitle(sti.Name, tabInformation.Name) || IsEqualsNameOrTitle(sti.Title, tabInformation.Title));
 
-            return storeTabItemViewModel;
+            return storeTabItem;
         }
 
         public TabItemViewModel GetStoreTabItemViewModelByName(string name)
         {
-            var storeTabItemViewModel = StoreTabItems.FirstOrDefault(sti => IsEqualsNameOrTitle(sti.Name, name) || IsEqualsNameOrTitle(sti.Title, name));
+            var storeTabItem = StoreTabItems.FirstOrDefault(sti => IsEqualsNameOrTitle(sti.Name, name) || IsEqualsNameOrTitle(sti.Title, name));
 
-            return storeTabItemViewModel;
+            return storeTabItem;
         }
 
-        public System.Windows.DependencyObject GetStoreViewElementByName(string name)
+        public System.Windows.DependencyObject? GetStoreViewElementByName(string name)
         {
-            var storeTabItemViewModel = StoreTabItems.FirstOrDefault(sti => IsEqualsNameOrTitle(sti.Name, name) || IsEqualsNameOrTitle(sti.Title, name));
+            var storeTabItem= StoreTabItems.FirstOrDefault(sti => IsEqualsNameOrTitle(sti.Name, name) || IsEqualsNameOrTitle(sti.Title, name));
 
-            return storeTabItemViewModel?.ViewElement;
+            return storeTabItem?.ViewElement;
         }
 
-        public System.Windows.DependencyObject GetStoreViewElementByType(Type viewType)
+        public System.Windows.DependencyObject? GetStoreViewElementByType(Type viewType)
         {
-            var storeTabItemViewModel = StoreTabItems.FirstOrDefault(sti => sti.ViewElementType == viewType);
+            var storeTabItem = StoreTabItems.FirstOrDefault(sti => sti.ViewElementType == viewType);
 
-            return storeTabItemViewModel?.ViewElement;
+            return storeTabItem?.ViewElement;
         }
 
-        public TabInformation GetStoreTabInformationByName(string name)
+        public TabInformation? GetStoreTabInformationByName(string name)
         {
-            var storeTabItemViewModel = StoreTabItems.FirstOrDefault(sti => IsEqualsNameOrTitle(sti.Name, name) || IsEqualsNameOrTitle(sti.Title, name));
+            var storeTabItem = StoreTabItems.FirstOrDefault(sti => IsEqualsNameOrTitle(sti.Name, name) || IsEqualsNameOrTitle(sti.Title, name));
 
-            return storeTabItemViewModel?.TabInformation;
+            return storeTabItem?.TabInformation;
         }
 
         public TabItemViewModel? GetStoreTabItemByName<T>(string name)
         {
             Type viewType = typeof(T);
 
-            var storeTabItemViewModel = StoreTabItems.FirstOrDefault(sti => (sti.ViewElementType is not null && sti.ViewElementType == viewType) && IsEqualsNameOrTitle(sti.Name, name));
+            var storeTabItem = StoreTabItems.FirstOrDefault(sti => (sti.ViewElementType is not null && sti.ViewElementType == viewType) && IsEqualsNameOrTitle(sti.Name, name));
 
-            return storeTabItemViewModel;
+            return storeTabItem;
         }
 
         public bool IsActiveTabItem(TabInformation tabInformation)
@@ -353,7 +357,7 @@ namespace Aksl.Tabs.ViewModels
             //  var activeTabItemViewModel = ActiveTabItems.FirstOrDefault(ti => ti.IsSelected);
             //  var isExists = IsEqualsNameOrTitle(activeTabItemViewModel?.Name, tabInformation.Name) || IsEqualsNameOrTitle(activeTabItemViewModel?.Title, tabInformation.Title);
 
-            var isAny = ActiveTabItems.Any(ti => ti.IsSelected && (IsEqualsNameOrTitle(ti.Name, tabInformation.Name) || IsEqualsNameOrTitle(ti.Title, tabInformation.Title)));
+            var isAny = ActiveTabItems.Any(ati => ati.IsSelected && (IsEqualsNameOrTitle(ati.Name, tabInformation.Name) || IsEqualsNameOrTitle(ati.Title, tabInformation.Title)));
 
             return isAny;
         }
@@ -383,8 +387,13 @@ namespace Aksl.Tabs.ViewModels
 
         private bool IsEqualsTabItemViewModel(TabItemViewModel tabItemViewModel, TabItemViewModel otherTabItemViewModel)
         {
-            var isEquals = IsEqualsNameOrTitle(tabItemViewModel?.Name, otherTabItemViewModel?.Name) ||
-                           IsEqualsNameOrTitle(tabItemViewModel?.Title, otherTabItemViewModel?.Title);
+            if (tabItemViewModel is null || otherTabItemViewModel is null)
+            {
+                return false;
+            }
+
+            var isEquals = IsEqualsNameOrTitle(tabItemViewModel.Name, otherTabItemViewModel.Name) ||
+                           IsEqualsNameOrTitle(tabItemViewModel.Title, otherTabItemViewModel.Title);
 
             return isEquals;
         }
@@ -396,7 +405,7 @@ namespace Aksl.Tabs.ViewModels
                 return false;
             }
 
-            var isEquals = nameOrTitle.Equals(otherNameOrTitle, StringComparison.InvariantCultureIgnoreCase) ||
+            var isEquals = nameOrTitle.Equals(otherNameOrTitle, StringComparison.OrdinalIgnoreCase) ||
                            otherNameOrTitle.Equals(nameOrTitle, StringComparison.InvariantCultureIgnoreCase);
 
             return isEquals;

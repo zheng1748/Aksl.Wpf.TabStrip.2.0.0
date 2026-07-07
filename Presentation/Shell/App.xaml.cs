@@ -7,7 +7,7 @@ using Aksl.Modules.Account.Views;
 using Aksl.Modules.AirCompresser;
 using Aksl.Modules.CoolingTower;
 using Aksl.Modules.HamburgerMenuSideBarTab;
-using Aksl.Modules.HamburgerMenuNavigationSideBar;
+using Aksl.Modules.HamburgerMenuNavigationSideBarTab;
 using Aksl.Modules.HamburgerMenuTreeSideBar;
 using Aksl.Modules.Home;
 using Aksl.Modules.Others;

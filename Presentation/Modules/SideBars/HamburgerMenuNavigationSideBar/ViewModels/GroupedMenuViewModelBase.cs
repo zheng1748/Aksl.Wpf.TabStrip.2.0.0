@@ -2,7 +2,7 @@
 
 using Prism.Mvvm;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
 {
     public abstract class GroupedMenuViewModelBase : BindableBase
     {

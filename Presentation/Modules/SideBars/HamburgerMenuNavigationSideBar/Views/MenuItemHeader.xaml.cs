@@ -12,7 +12,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 
-namespace Aksl.Modules.HamburgerMenuNavigationSideBar.Views
+namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views
 {
     public partial class MenuItemHeader : UserControl
     {
