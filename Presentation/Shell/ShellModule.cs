@@ -13,14 +13,12 @@ namespace Aksl.Modules.Shell
     {
         #region Members
         private readonly IUnityContainer _container;
-        private readonly IRegionManager _regionManager;
         #endregion
 
         #region Constructors
-        public ShellModule(IUnityContainer container, IRegionManager regionManager)
+        public ShellModule(IUnityContainer container)
         {
             _container = container;
-            _regionManager = regionManager;
         }
         #endregion
 
@@ -31,14 +29,6 @@ namespace Aksl.Modules.Shell
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-
-        // _regionManager.RequestNavigate(RegionNames.ShellContentRegion, nameof(Aksl.Modules.HamburgerMenuSideBar.Views.HamburgerMenuSideBarHubView));
-      //  _regionManager.RequestNavigate(RegionNames.ShellContentRegion, nameof(HamburgerMenuNavigationSideBar.Views.HamburgerMenuNavigationSideBarHubView));
-          // _regionManager.RequestNavigate(RegionNames.ShellContentRegion, nameof(Aksl.Modules.HamburgerMenuTreeSideBar.Views.HamburgerMenuTreeSideBarHubView));
-
-          // _regionManager.RequestNavigate(RegionNames.ShellContentRegion, nameof(Aksl.Modules.HamburgerMenuPopupSideBar.Views.HamburgerMenPopupSideBarHubView));
-
-          // _regionManager.RequestNavigate(RegionNames.ShellLoginRegion, nameof(LoginStatusView));
         }
         #endregion
     }
