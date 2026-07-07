@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>Aksl.TabStripst</RootNamespace>
+		<Description>Use Wpf TabStrips.</Description>
+		<Authors>zheng ming 13529806</Authors>
+		<Company>Aksl</Company>
+		<Product>Wpf Tab TabStripst</Product>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Aksl.TabStrips.Assist\Aksl.TabStrips.Assist.csproj" />
+		<ProjectReference Include="..\Prism Library\Prism.Core\Prism.Core.csproj" />
+		<ProjectReference Include="..\Prism Library\Prism.Unity.Wpf\Prism.Unity.Wpf.csproj" />
+		<ProjectReference Include="..\Prism Library\Prism.Wpf\Prism.Wpf.csproj" />
+	</ItemGroup>
+
+</Project>

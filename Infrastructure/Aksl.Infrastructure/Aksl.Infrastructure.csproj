@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	<TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+	<AssemblyName>Aksl.Infrastructure</AssemblyName>
+    <RootNamespace>Aksl.Infrastructure</RootNamespace>
+    <Authors>zheng ming</Authors>
+    <Company>Aksl</Company>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommonServiceLocator" Version="2.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.9" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
+		<!--<PackageReference Include="System.Drawing.Common" Version="10.0.9" />
+		<PackageReference Include="System.Net.Http" Version="4.3.4" />-->
+		<PackageReference Include="Unity" Version="5.11.10" />
+		<PackageReference Include="Unity.Container" Version="5.11.11" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+
+		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
+
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.9" />
+
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.9" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.9" />
+
+		<!--<PackageReference Include="System.ValueTuple" Version="4.6.2" />
+
+		<PackageReference Include="System.Buffers" Version="4.6.1" />
+		<PackageReference Include="System.Memory" Version="4.6.3" />
+		<PackageReference Include="System.IO.Pipelines" Version="10.0.9" />
+
+		<PackageReference Include="System.Threading.Channels" Version="10.0.9" />
+		<PackageReference Include="System.Threading.Tasks.Dataflow" Version="10.0.9" />
+		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />-->
+	</ItemGroup>
+	
+  <ItemGroup>
+    <!--<PackageReference Include="System.Runtime.WindowsRuntime" Version="4.7.0" />
+    <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml" Version="4.7.0" />-->
+    <ProjectReference Include="..\..\Toolkits\Aksl.ActiveContents\Aksl.ActiveContents.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Aksl.Dialogs\Aksl.Dialogs.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Aksl.TabStrips.Assist\Aksl.TabStrips.Assist.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Aksl.TabStrips\Aksl.TabStrips.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Aksl.Toolkit\Aksl.Toolkit.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Prism Library\Prism.Core\Prism.Core.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Prism Library\Prism.Unity.Wpf\Prism.Unity.Wpf.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Prism Library\Prism.Wpf\Prism.Wpf.csproj" />
+  </ItemGroup>
+  
+</Project>

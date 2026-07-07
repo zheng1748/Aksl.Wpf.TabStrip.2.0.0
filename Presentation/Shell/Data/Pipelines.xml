@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MenuItem Id="0"
+		  Name="Pipelines"
+		  Title="Root"
+		  Level="0">
+	<MenuItem Id="2"
+			  Name="Pipeliner"
+			  Title="流水管道测试"
+			  Level="3"
+			 IsCacheable="True"
+			  IconKind="LineScan"
+			  ModuleName="PipelineModule"
+			  ViewName="Aksl.Modules.Pipeline.Views.PipelineHubView,Aksl.Modules.Pipeline"
+			  IsNexOnNotLeaf="False">
+		<MenuItem Id="2"
+				  Name="SetWestToEastButton"
+				  Title="West To East"
+				  ElementName="SetWestToEastButton"
+				  Mode="Collapsed">
+		</MenuItem>
+		<MenuItem Id="3"
+				  Name="SetEastToWestButton"
+				  Title="East To West"
+				  ElementName="SetEastToWestButton"
+				  Mode="Disabled">
+		</MenuItem>
+		<MenuItem Id="4"
+				  Name="SetPauseButton"
+				  Title="Pause"
+				  ElementName="SetPauseButton"
+				  Mode="Disabled">
+		</MenuItem>
+	</MenuItem>
+	<MenuItem Id="2"
+			  Name="CoolingPier"
+			  Title="冷却风扇测试"
+			  Level="3"
+			  IsCacheable="True"
+			  IconKind="FanAuto"
+			  ModuleName="PipelineModule"
+			  ViewName="Aksl.Modules.Pipeline.Views.CoolingPieHubView,Aksl.Modules.Pipeline">
+	</MenuItem>
+	<MenuItem Id="2"
+			  Name="PipelineSystemer"
+			  Title="流水管道系统"
+			  Level="3"
+			  IconKind="LinkBox"
+			  IsCacheable="True"
+			  ModuleName="PipelineModule"
+			  ViewName="Aksl.Modules.Pipeline.Views.PipelineSystemHubView,Aksl.Modules.Pipeline"  >
+	</MenuItem>
+</MenuItem>
+
+

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MenuItem Id="0"
+		  Name="Radars"
+		  Title="Root"
+		  Level="0" >
+	<MenuItem Id="2"
+			  Name="RadarMapTry"
+			  Title="雷达图测试"
+			  Level="3"
+			  IsCacheable="False"
+			  IconKind="TrackChanges"
+			  ModuleName="RadarMapModule"
+			  ViewName="Aksl.Modules.RadarMap.Views.RadarMapHubView,Aksl.Modules.RadarMap" >
+	</MenuItem>
+	<MenuItem Id="2"
+			  Name="RadarTry"
+			  Title="圆圈雷达图测试"
+			  Level="3"
+			  IsCacheable="False"
+			  IconKind="Radiator"
+			  ModuleName="RadarMapModule"
+			  ViewName="Aksl.Modules.RadarMap.Views.RadarHubView,Aksl.Modules.RadarMap" >
+	</MenuItem>
+</MenuItem>
+
+

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MenuItem Id="0"
+		  Name="All"
+		  Title="根"
+		  Level="0" >
+	<MenuItem Id="1"
+			  Name="Home"
+			  Title="主页"
+		      Level="1"  
+			  IconKind="Home"
+		      IsCacheable="True"
+		      IsHome="True"
+		      IsSelectedOnInitialize="True"
+		      ModuleName="HomeModule"
+			  ViewName="Aksl.Modules.Home.Views.HomeView,Aksl.Modules.Home">
+	</MenuItem>
+	<MenuItem Id="2"
+			  Name="IndustryManager"
+			  Title="Industry"
+			  Level="1"
+			  IconKind="Draw"
+			  IsCacheable="True"
+			  ModuleName=""
+			  IsNexApplication="False"   
+			  IsNexOnNotLeaf="True"
+	          IsNextNavigation="False"
+			  NavigationName="Industry">
+	</MenuItem>
+	<MenuItem Id="3"
+			  Name="RadarsManager"
+			  Title="Radars"
+			  Level="1"
+			  IconKind="Radar"
+			  IsCacheable="True"
+			  WorkspaceViewEventName=""
+		      ModuleName=""
+			  ViewName=""
+		      ActiveContentName=""
+			  IsNextNavigation="False"
+			  NavigationName="Radars">
+	</MenuItem>
+	<MenuItem Id="5"
+			  Name="AccountManager"
+			  Title="Accounts"
+			  Level="1"
+			  IconKind="AccountCowboyHat"
+			  IsCacheable="True"
+		      IsNextNavigation="True"
+			  NavigationName="Accounts">
+	</MenuItem>
+	<MenuItem Id="5"
+		  Name="OthersManager"
+		  Title="Others"
+		  Level="1"
+		  IconKind="Oar"
+		  IsCacheable="True"
+		  IsNextNavigation="True"
+		  NavigationName="Others">
+	</MenuItem>
+</MenuItem>

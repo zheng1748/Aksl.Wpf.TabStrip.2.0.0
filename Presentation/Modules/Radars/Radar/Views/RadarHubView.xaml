@@ -1,0 +1,254 @@
+﻿<UserControl x:Class="Aksl.Modules.RadarMap.Views.RadarHubView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:Aksl.Modules.RadarMap.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="1200"
+             x:Name="RadarHubContainer"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <!--<ei:Interaction.Triggers>
+        <ei:EventTrigger EventName="Loaded"
+                         SourceObject="{Binding ElementName=RadarHubContainer}">
+            <ei:CallMethodAction MethodName="Load"
+                                 TargetObject="{Binding}" />
+        </ei:EventTrigger>
+    </ei:Interaction.Triggers>-->
+    <UserControl.Resources>
+
+        <LinearGradientBrush x:Key="radarScanningColor"
+                             StartPoint="0,0"
+                             EndPoint="0,1">
+            <GradientStop Offset="0.1"
+                          Color="Lime" />
+            <GradientStop Offset="0.9"
+                          Color="Transparent" />
+        </LinearGradientBrush>
+    </UserControl.Resources>
+    
+    <Grid Background="WhiteSmoke"
+          Margin="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <views:RadarView  x:Name="RadarView"
+                          Grid.Row="0"
+                          DataContext="{Binding Path=RadarViewModel}"
+                          RadarCircles="{Binding Path=RadarCircles,Mode=TwoWay}"
+                          RadarLines="{Binding Path=RadarLines,Mode=OneWay}"
+                          RadarItems="{Binding Path=RadarItems,Mode=OneWay}"
+                          InnerRadius="{Binding Path=InnerRadius,Mode=TwoWay}"
+                          UseCirceCount="{Binding Path=UseCirceCount,Mode=OneWay}"
+                          CirceCount="{Binding Path=CirceCount,Mode=TwoWay}"
+                          UnionColor="{Binding Path=UnionColor,Mode=OneWay}"
+                          CircelColors="{Binding Path=CircelColors,Mode=OneWay}"
+                          RadarFullWidth="{Binding Path=RadarFullWidth,Mode=OneWay}"
+                          OutRadius="{Binding Path=OutRadius,Mode=OneWay}"
+                          RadarLineColor="{Binding Path=RadarLineColor,Mode=OneWay}"
+                          RadarLineCount="{Binding Path=RadarLineCount,Mode=OneWay}"
+                          RadarLineThickness="{Binding Path=RadarLineThickness,Mode=OneWay}"
+                          ScanningColor="{StaticResource radarScanningColor}"
+                          ScanningPath="M 0.1,0.3 A 0.9,1 0 0 1 0.9 0.3 M 0.1 0.3  L 0.5 1 L 0.9 0.3"
+                          Play="{Binding Path=Play,Mode=OneWay}"
+                          Width="{Binding Path=Width,Mode=TwoWay}"
+                          Height="{Binding Path=Height,Mode=TwoWay}"
+                          Background="Gray" />
+        
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,10">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="OutRadius:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=OutRadius,ElementName=RadarView,Mode=OneWay}"
+                             IsReadOnly="True"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="RadarFullWidth:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=RadarFullWidth,ElementName=RadarView,Mode=OneWay}"
+                             IsReadOnly="True"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Width:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=Width,Mode=TwoWay}"
+                             Width="50"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content=" Height:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=Height,Mode=TwoWay}"
+                             Width="50"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="InnerRadius:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=InnerRadius,ElementName=RadarView,Mode=TwoWay}"
+                             Width="50"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content=" CirceCount:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path= CirceCount,ElementName=RadarView,Mode=TwoWay}"
+                             Width="50"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="RadarLineCount:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=RadarLineCount,ElementName=RadarView,Mode=TwoWay}"
+                             Width="30"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="RadarLineColor:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path= RadarLineColor,ElementName=RadarView,Mode=TwoWay}"
+                             Width="100"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="RadarLineThickness:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=RadarLineThickness,ElementName=RadarView,Mode=TwoWay}"
+                             Width="30"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Top:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=Top,Mode=OneWay}"
+                             Width="60"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Left:"
+                           FontSize="18"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,0,1,0">
+                    </Label>
+                    <TextBox Text="{Binding Path=Left,Mode=OneWay}"
+                             Width="60"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             FontSize="18"
+                             Margin="1,0,10,0" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,20">
+            <Button Content="Play"
+                    Command="{Binding Path=PlayCommand}"
+                    Width="200"
+                    Height="30"
+                    Margin="0,2,0,0" />
+            <Button Content="Pause"
+                    Command="{Binding Path=PauseCommand}"
+                    Width="200"
+                    Height="30"
+                    Margin="10,2,0,0"  />
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Aksl.Modules.RadarMap.Views.RadarItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             xmlns:ei="http://schemas.microsoft.com/xaml/behaviors"
+             d:DesignHeight="200"
+             d:DesignWidth="500">
+    <ei:Interaction.Triggers>
+        <ei:EventTrigger EventName="MouseLeftButtonDown">
+            <ei:ChangePropertyAction TargetObject="{Binding Path=DataContext,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type UserControl}}}"
+                                     PropertyName="IsSelected"
+                                     Value="True" />
+        </ei:EventTrigger>
+    </ei:Interaction.Triggers>
+    <UserControl.Resources>
+
+    </UserControl.Resources>
+
+    <!--<Border  BorderBrush="AliceBlue" Canvas.Top="{Binding Path=Top}"
+            Canvas.Left="{Binding Path=Left}">-->
+    <Border>
+        <Ellipse Width="{Binding Path=Width}"
+                 Height="{Binding Path=Height}"
+                 Fill="{Binding Path=Color}" />
+    </Border>
+
+</UserControl>

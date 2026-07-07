@@ -1,0 +1,132 @@
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
+
+using Prism;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Ioc;
+using Prism.Mvvm;
+using Prism.Unity;
+using Unity;
+
+namespace Aksl.Modules.HamburgerMenuPopupSideBar.ViewModels
+{
+    public class PopupViewModelBase : BindableBase
+    {
+        #region Constructors
+        public PopupViewModelBase()
+        {
+        }
+        #endregion
+
+        #region Popup Properties
+        private bool _allowsTransparency = true;
+        public bool AllowsTransparency
+        {
+            get => _allowsTransparency;
+            set => SetProperty<bool>(ref _allowsTransparency, value);
+        }
+
+        private bool _isOpen = false;
+        public bool IsOpen
+        {
+            get => _isOpen;
+            set => SetProperty<bool>(ref _isOpen, value);
+        }
+
+        private bool _staysOpen = true;
+        public bool StaysOpen
+        {
+            get => _staysOpen;
+            set => SetProperty<bool>(ref _staysOpen, value);
+        }
+
+        private System.Windows.Controls.Primitives.PlacementMode _placementMode = System.Windows.Controls.Primitives.PlacementMode.Right;
+        public System.Windows.Controls.Primitives.PlacementMode Placement
+        {
+            get => _placementMode;
+            set => SetProperty<System.Windows.Controls.Primitives.PlacementMode>(ref _placementMode, value);
+        }
+
+        private System.Windows.UIElement _placementTarget = null;
+        public System.Windows.UIElement PlacementTarget
+        {
+            get => _placementTarget;
+            set => SetProperty<System.Windows.UIElement>(ref _placementTarget, value);
+        }
+
+        private System.Windows.Controls.Primitives.PopupAnimation _popupAnimation = System.Windows.Controls.Primitives.PopupAnimation.Slide;
+        public System.Windows.Controls.Primitives.PopupAnimation PopupAnimation
+        {
+            get => _popupAnimation;
+            set => SetProperty<System.Windows.Controls.Primitives.PopupAnimation>(ref _popupAnimation, value);
+        }
+        #endregion
+    }
+
+    public class PopupViewModel : PopupViewModelBase
+    {
+        #region Members
+        #endregion
+
+        #region Constructors
+        public PopupViewModel() : base()
+        {
+            AllLeafPopupSideBarItems = new();
+        }
+        #endregion
+
+        #region Properties
+        public ObservableCollection<PopupSideBarItemViewModel> AllLeafPopupSideBarItems { get; set; }
+
+        private PopupSideBarItemViewModel _popupSideBarItemViewModel = default;
+        public PopupSideBarItemViewModel SelectedPopupSideBarItem
+        {
+            get => _popupSideBarItemViewModel;
+            set => SetProperty<PopupSideBarItemViewModel>(ref _popupSideBarItemViewModel, value);
+        }
+        #endregion
+
+        #region Add PropertyChanged Method
+        public void AddPropertyChanged()
+        {
+            foreach (var psivm in AllLeafPopupSideBarItems)
+            {
+                AddPopupSideBarItemPropertyChanged(psivm);
+            }
+
+            void AddPopupSideBarItemPropertyChanged(PopupSideBarItemViewModel popupSideBarItemViewModel)
+            {
+                popupSideBarItemViewModel.PropertyChanged += (sender, e) =>
+                {
+                    if (sender is PopupSideBarItemViewModel psivm)
+                    {
+                        if (e.PropertyName == nameof(PopupSideBarItemViewModel.IsSelected))
+                        {
+                            if (psivm.IsSelected && SelectedPopupSideBarItem != psivm)
+                            {
+                                SelectedPopupSideBarItem = psivm;
+                            }
+                        }
+                    }
+                };
+            }
+        }
+        #endregion
+
+        #region Clear Selected Method
+        public void ClearSelectedPopupSideBarItems()
+        {
+            SelectedPopupSideBarItem.IsSelected = false;
+            //SelectedPopupSideBarItem = null;
+            // AllLeafPopupSideBarItems.Where(pi => pi.IsSelected).ToList().ForEach(psbi => 
+            //{
+            //    SelectedPopupSideBarItem=null;
+            //    psbi.IsSelected = false;
+            //});
+        }
+        #endregion
+    }
+}

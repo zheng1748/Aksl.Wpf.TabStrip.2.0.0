@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Aksl.TabBits.Views.TabHubView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:Aksl.TabBits.Views"
+             xmlns:viewmodels="clr-namespace:Aksl.TabBits.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.Resources>
+    </UserControl.Resources>
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <views:TabHeaderView DataContext="{Binding Path=TabHeaderViewModel}"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch" />
+        </Grid>
+
+        <Separator Grid.Row="1"
+                   Margin="0,0,0,0"
+                   Height="3"
+                   HorizontalAlignment="Stretch"
+                   BorderBrush="#193441"
+                   Visibility="{Binding Path=HasContent,Converter={StaticResource booleanToVisibilityConverter}}" />
+
+        <Border Grid.Row="2"
+                Margin="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderThickness="2"
+                CornerRadius="5"
+                BorderBrush="Transparent">
+            <Grid>
+                <!--<views:TabContentView DataContext="{Binding Path=TabContentViewModel}" />-->
+                <views:TabContentItemView DataContext="{Binding Path=TabContentViewModel.SelectedTabContentItem}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

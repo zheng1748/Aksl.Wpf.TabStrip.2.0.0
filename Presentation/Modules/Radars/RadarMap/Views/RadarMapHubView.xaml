@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Aksl.Modules.RadarMap.Views.RadarMapHubView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:Aksl.Modules.RadarMap.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <Grid Background="WhiteSmoke" Margin="4">
+        <views:RadarMapView x:Name="RadarMapView"
+                            DataContext="{Binding Path=RadarMapViewModel}"
+                            Layers="{Binding Layers,Mode=TwoWay}"
+                            LayersPercentList="{Binding LayersPercentList}"
+                            Values="{Binding Values}"
+                            HeightLightValues="{Binding HeightLightValues}"
+                            Radials="6"
+                            Radius="300"
+                            ShowTitle="True"
+                            Titles="{Binding Titles}"
+                            Background="Gray" />
+    </Grid>
+</UserControl>

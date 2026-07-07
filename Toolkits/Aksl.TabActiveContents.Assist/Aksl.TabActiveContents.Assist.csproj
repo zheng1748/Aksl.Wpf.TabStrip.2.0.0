@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Aksl.TabActiveContents.Assist</RootNamespace>
+    <Description>Use Wpf Tab ActiveContent Assist.</Description>
+	<Authors>zheng ming 13529806</Authors>
+	<Company>Aksl</Company>
+    <Product>Wpf Tab ActiveContents Assist</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Prism Library\Prism.Core\Prism.Core.csproj" />
+  </ItemGroup>
+
+</Project>
