@@ -12,7 +12,7 @@ using Unity;
 
 namespace Aksl.Infrastructure;
 
-public class NodeResolver<T> where T : NodeViewModel
+public class NodeResolver<T> where T : Mvvm.NodeViewModel
 {
     #region Members
     private readonly IMenuService _menuService;
@@ -244,11 +244,12 @@ public class NodeResolver<T> where T : NodeViewModel
             return false;
         }
 
-        var isAny = (!string.IsNullOrEmpty(nameOrTitle) && nameOrTitle.Equals(otherNameOrTitle, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (!string.IsNullOrEmpty(otherNameOrTitle) && otherNameOrTitle.Equals(nameOrTitle, StringComparison.InvariantCultureIgnoreCase));
+        var isAny = nameOrTitle.Equals(otherNameOrTitle, StringComparison.InvariantCultureIgnoreCase) ||
+                   otherNameOrTitle.Equals(nameOrTitle, StringComparison.InvariantCultureIgnoreCase);
 
         return isAny;
     }
     #endregion
 }
+
 

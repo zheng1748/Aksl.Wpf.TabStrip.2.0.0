@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media.Animation;
 
-namespace Aksl.Modules.HamburgerMenuSideBarTab
+namespace Aksl.Mvvm
 {
     public abstract class GridLengthAnimationBase : AnimationTimeline
     {

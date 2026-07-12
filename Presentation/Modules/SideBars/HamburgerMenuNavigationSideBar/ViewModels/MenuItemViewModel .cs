@@ -17,7 +17,7 @@ using Unity;
 
 namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
 {
-    public class MenuItemViewModel : NodeViewModel
+    public class MenuItemViewModel : Mvvm.NodeViewModel
     {
         #region Members
         protected readonly IEventAggregator _eventAggregator;

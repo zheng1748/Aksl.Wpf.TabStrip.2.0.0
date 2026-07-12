@@ -32,7 +32,44 @@ public class ActiveContentManager
     #endregion
 
     #region Create ContentInformation Method
-    public async Task<ContentInformation> CreateContentInformationAsync(Infrastructure.MenuItem menuItem, NavigationParameters navigationParameters = null)
+    public ContentInformation CreateContentInformation(string name, string title, string viewTypeAssemblyQualifiedName, NavigationParameters navigationParameters = null)
+    {
+        Type viewType = Type.GetType(viewTypeAssemblyQualifiedName);
+        if (viewType is null)
+        {
+            throw new ArgumentException($"Missing Type {viewTypeAssemblyQualifiedName}");
+        }
+        var viewName = viewType.Name;
+
+        var unityContainer = PrismIocExtensions.GetUnityContainer();
+        var regionNavigationService = unityContainer.Resolve<IRegionNavigationService>();
+
+        ContentInformation contentInformation = new()
+        {
+            Name = name,
+            Title = title,
+            ViewName = viewTypeAssemblyQualifiedName
+        };
+
+        var registeredView = unityContainer.Resolve<object>(viewName);
+        if (registeredView is FrameworkElement frameworkElement)
+        {
+            MvvmHelpers.AutowireViewModel(registeredView);
+
+            NavigationContext navigationContext = new(regionNavigationService, new Uri(viewName, UriKind.RelativeOrAbsolute));
+            navigationContext.Parameters = navigationParameters;
+
+            Action<INavigationAware> action = (n) => n.OnNavigatedTo(navigationContext);
+            MvvmHelpers.ViewAndViewModelAction<INavigationAware>(registeredView, action);
+
+            contentInformation.ViewName = null;
+            contentInformation.ViewElement = frameworkElement;
+        }
+
+        return contentInformation;
+    }
+
+    public ContentInformation CreateContentInformation(Infrastructure.MenuItem menuItem, NavigationParameters navigationParameters = null)
     {
         var viewName = menuItem.GetViewTypeName();
 
@@ -72,7 +109,41 @@ public class ActiveContentManager
     #endregion
 
     #region Add View To Random Content Method
-    public async Task AddViewToRandomContentAsync(Infrastructure.MenuItem menuItem, RandomActiveContentViewModel  randomActiveContentViewModel, NavigationParameters navigationParameters = null)
+    public async Task AddViewToRandomContentAsync(Infrastructure.MenuItem menuItem, RandomActiveContentViewModel randomActiveContentViewModel)
+    {
+        var viewName = menuItem.GetViewTypeName();
+
+        ContentInformation contentInformation = new()
+        {
+            Name = menuItem.Name,
+            Title = menuItem.Title,
+            ViewName = menuItem.ViewName
+        };
+
+        var currentView = randomActiveContentViewModel.GetStoreViewElementByName(menuItem.Name);
+        if (currentView is not null)
+        {
+            if (menuItem.IsCacheable)
+            {
+                // activeContentViewModel.SetContentItem(contentInformation);
+                randomActiveContentViewModel.SetActiveContentItemByName(menuItem.Name);
+            }
+            else
+            {
+                // ActiveContents.ContentInformation contentInformation = await CreateContentInformationAsync(menuItem, navigationParameters);
+                randomActiveContentViewModel.RetsetContentItem(contentInformation);
+            }
+        }
+        else
+        {
+            // ActiveContents.ContentInformation contentInformation = await CreateContentInformationAsync(menuItem, navigationParameters);
+            randomActiveContentViewModel.Add(contentInformation);
+        }
+    }
+    #endregion
+
+    #region  NavigationTo To Random Content Method
+    public async Task NavigationToRandomContentAsync(Infrastructure.MenuItem menuItem, RandomActiveContentViewModel randomActiveContentViewModel, NavigationParameters navigationParameters)
     {
         var viewName = menuItem.GetViewTypeName();
 
@@ -86,14 +157,27 @@ public class ActiveContentManager
             }
             else
             {
-                ActiveContents.ContentInformation contentInformation = await CreateContentInformationAsync(menuItem, navigationParameters);
+                ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
                 randomActiveContentViewModel.RetsetContentItem(contentInformation);
             }
         }
         else
         {
-            ActiveContents.ContentInformation contentInformation = await CreateContentInformationAsync(menuItem, navigationParameters);
+            ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
             randomActiveContentViewModel.Add(contentInformation);
+        }
+    }
+    #endregion
+
+    #region Register Navigation For RandomContentt Method
+    public void RegisterNavigationForRandomContentt(string name, string title, string viewTypeAssemblyQualifiedName, RandomActiveContentViewModel randomActiveContentViewModel, NavigationParameters navigationParameters, bool isActive = true)
+    {
+        var currentView = randomActiveContentViewModel.GetStoreViewElementByName(name);
+        if (currentView is null)
+        {
+            ActiveContents.ContentInformation contentInformation = CreateContentInformation(name, title, viewTypeAssemblyQualifiedName, navigationParameters);
+
+            randomActiveContentViewModel.Add(contentInformation, isActive);
         }
     }
     #endregion
@@ -112,13 +196,13 @@ public class ActiveContentManager
             }
             else
             {
-                ActiveContents.ContentInformation contentInformation = await CreateContentInformationAsync(menuItem, navigationParameters);
+                ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
                 sequenceActiveContentViewModel.RetsetContentItem(contentInformation);
             }
         }
         else
         {
-            ActiveContents.ContentInformation contentInformation = await CreateContentInformationAsync(menuItem, navigationParameters);
+            ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
             sequenceActiveContentViewModel.Add(contentInformation);
         }
     }

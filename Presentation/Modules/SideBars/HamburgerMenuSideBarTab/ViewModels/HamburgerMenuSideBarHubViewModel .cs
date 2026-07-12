@@ -30,7 +30,7 @@ using Unity;
 
 namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
 {
-    public class HamburgerMenuSideBarHubViewModel : BindableBase, INavigationAware
+    public class HamburgerMenuSideBarHubViewModel : Aksl.Mvvm.HamburgerMenuViewModel, INavigationAware
     {
         #region Members
         private readonly IUnityContainer _container;
@@ -49,11 +49,10 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
             _menuService = _container.Resolve<IMenuService>();
 
             IsPaneOpen = true;
-            SelectedDisplayMode = SplitViewDisplayMode.CompactInline;
-            SelectedPlacement = SplitViewPanePlacement.Left;
+            SelectedDisplayMode = Aksl.Mvvm.SplitViewDisplayMode.CompactInline;
+            SelectedPlacement = Aksl.Mvvm.SplitViewPanePlacement.Left;
 
             RegisterHamburgerMenuBarPaneOpenEvent();
-
             RegisterActiveContentAsync().Await();
         }
         #endregion
@@ -92,59 +91,26 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
             set => SetProperty<bool>(ref field, value);
         } = false;
 
-        public bool CanMove =>
-                      LeftPaneActiveContentViewModel.CanMove;
+        //public bool CanMove =>
+        //              LeftPaneActiveContentViewModel.CanMove;
 
-        public Visibility MoveButtonVisibility
-        {
-            get
-            {
-                field = Visibility.Collapsed;
-                return field;
-            }
-        } = Visibility.Collapsed;
+        //public Visibility MoveButtonVisibility
+        //{
+        //    get
+        //    {
+        //        field = Visibility.Collapsed;
+        //        return field;
+        //    }
+        //} = Visibility.Collapsed;
         #endregion
 
         #region HamburgerMenu Properties
-      //  private Brush _paneBackground = new SolidColorBrush(Colors.Transparent);
-        private Brush _paneBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D3D3D3"));
-        public Brush PaneBackground
+        public override bool IsPaneOpen
         {
-            get => _paneBackground;
-            set => SetProperty<Brush>(ref _paneBackground, value);
-        }
-
-        public GridLength OpenPaneGridLength
-        {
-            get { return new GridLength(OpenPaneLength); }
-        }
-
-        private double _openPaneLength = 320d;
-        public double OpenPaneLength
-        {
-            get => _openPaneLength;
-            set => SetProperty<double>(ref _openPaneLength, value);
-        }
-
-        public GridLength CompactPaneGridLength
-        {
-            get { return new GridLength(CompactPaneLength); }
-        }
-
-        private double _compactPaneLength = 48d;
-        public double CompactPaneLength
-        {
-            get => _compactPaneLength;
-            set => SetProperty<double>(ref _compactPaneLength, value);
-        }
-
-        private bool _isPaneOpen = false;
-        public bool IsPaneOpen
-        {
-            get => _isPaneOpen;
+            get => field;
             set
             {
-                if (SetProperty<bool>(ref _isPaneOpen, value))
+                if (SetProperty<bool>(ref field, value))
                 {
                     if (TopHamburgerMenuSideBar is not null)
                     {
@@ -155,101 +121,153 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
                 }
             }
         }
+        #endregion
 
-        public List<SplitViewDisplayMode> DisplayModeList
-        {
-            get => Enum.GetValues(typeof(SplitViewDisplayMode)).Cast<SplitViewDisplayMode>().ToList();
-        }
+        #region HamburgerMenu Properties
+        //  private Brush _paneBackground = new SolidColorBrush(Colors.Transparent);
+        //private Brush _paneBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D3D3D3"));
+        //public Brush PaneBackground
+        //{
+        //    get => _paneBackground;
+        //    set => SetProperty<Brush>(ref _paneBackground, value);
+        //}
 
-        private SplitViewDisplayMode _selectedDisplayMode = SplitViewDisplayMode.Overlay;
-        public SplitViewDisplayMode SelectedDisplayMode
-        {
-            get => _selectedDisplayMode;
-            set
-            {
-                if (SetProperty<SplitViewDisplayMode>(ref _selectedDisplayMode, value))
-                {
-                    VisualState = GetVisualState();
-                }
-            }
-        }
+        //public GridLength OpenPaneGridLength
+        //{
+        //    get { return new GridLength(OpenPaneLength); }
+        //}
 
-        public List<SplitViewPanePlacement> PanePlacementList
-        {
-            get => Enum.GetValues(typeof(SplitViewPanePlacement)).Cast<SplitViewPanePlacement>().ToList();
-        }
+        //private double _openPaneLength = 320d;
+        //public double OpenPaneLength
+        //{
+        //    get => _openPaneLength;
+        //    set => SetProperty<double>(ref _openPaneLength, value);
+        //}
 
-        private SplitViewPanePlacement _selectedPanePlacement = SplitViewPanePlacement.Left;
-        public SplitViewPanePlacement SelectedPlacement
-        {
-            get => _selectedPanePlacement;
-            set
-            {
-                if (SetProperty<SplitViewPanePlacement>(ref _selectedPanePlacement, value))
-                {
-                    VisualState = GetVisualState();
-                }
-            }
-        }
+        //public GridLength CompactPaneGridLength
+        //{
+        //    get { return new GridLength(CompactPaneLength); }
+        //}
 
-        public string VisualState
-        {
-            get => field;
-            set => SetProperty<string>(ref field, value);
-        }
+        //private double _compactPaneLength = 48d;
+        //public double CompactPaneLength
+        //{
+        //    get => _compactPaneLength;
+        //    set => SetProperty<double>(ref _compactPaneLength, value);
+        //}
+
+        //private bool _isPaneOpen = false;
+        //public bool IsPaneOpen
+        //{
+        //    get => _isPaneOpen;
+        //    set
+        //    {
+        //        if (SetProperty<bool>(ref _isPaneOpen, value))
+        //        {
+        //            if (TopHamburgerMenuSideBar is not null)
+        //            {
+        //                TopHamburgerMenuSideBar.IsPaneOpen = value;
+        //            }
+
+        //            VisualState = GetVisualState();
+        //        }
+        //    }
+        //}
+
+        //public List<SplitViewDisplayMode> DisplayModeList
+        //{
+        //    get => Enum.GetValues(typeof(SplitViewDisplayMode)).Cast<SplitViewDisplayMode>().ToList();
+        //}
+
+        //private SplitViewDisplayMode _selectedDisplayMode = SplitViewDisplayMode.Overlay;
+        //public SplitViewDisplayMode SelectedDisplayMode
+        //{
+        //    get => _selectedDisplayMode;
+        //    set
+        //    {
+        //        if (SetProperty<SplitViewDisplayMode>(ref _selectedDisplayMode, value))
+        //        {
+        //            VisualState = GetVisualState();
+        //        }
+        //    }
+        //}
+
+        //public List<SplitViewPanePlacement> PanePlacementList
+        //{
+        //    get => Enum.GetValues(typeof(SplitViewPanePlacement)).Cast<SplitViewPanePlacement>().ToList();
+        //}
+
+        //private SplitViewPanePlacement _selectedPanePlacement = SplitViewPanePlacement.Left;
+        //public SplitViewPanePlacement SelectedPlacement
+        //{
+        //    get => _selectedPanePlacement;
+        //    set
+        //    {
+        //        if (SetProperty<SplitViewPanePlacement>(ref _selectedPanePlacement, value))
+        //        {
+        //            VisualState = GetVisualState();
+        //        }
+        //    }
+        //}
+
+        //public string VisualState
+        //{
+        //    get => field;
+        //    set => SetProperty<string>(ref field, value);
+        //}
         #endregion
 
         #region Get HamburgerMenu State Method
-        private bool IsCompact
-        {
-            get
-            {
-                return SelectedDisplayMode switch
-                {
-                    SplitViewDisplayMode.CompactInline or SplitViewDisplayMode.CompactOverlay => true,
-                    _ => false,
-                };
-            }
-        }
+        //private bool IsCompact
+        //{
+        //    get
+        //    {
+        //        return SelectedDisplayMode switch
+        //        {
+        //            SplitViewDisplayMode.CompactInline or SplitViewDisplayMode.CompactOverlay => true,
+        //            _ => false,
+        //        };
+        //    }
+        //}
 
-        private bool IsInline
-        {
-            get
-            {
-                return SelectedDisplayMode switch
-                {
-                    SplitViewDisplayMode.CompactInline or SplitViewDisplayMode.Inline => true,
-                    _ => false
-                };
-            }
-        }
+        //private bool IsInline
+        //{
+        //    get
+        //    {
+        //        return SelectedDisplayMode switch
+        //        {
+        //            SplitViewDisplayMode.CompactInline or SplitViewDisplayMode.Inline => true,
+        //            _ => false
+        //        };
+        //    }
+        //}
 
-        protected virtual string GetVisualState()
-        {
-            string state;
+        //protected virtual string GetVisualState()
+        //{
+        //    string state;
 
-            if (IsPaneOpen)
-            {
-                state = "Open";
-                state += IsInline ? "Inline" : SelectedDisplayMode.ToString();
-            }
-            else
-            {
-                state = "Closed";
-                if (IsCompact)
-                {
-                    state += "Compact";
-                }
-                //else
-                //{
-                //    return state;
-                //}
-            }
+        //    if (IsPaneOpen)
+        //    {
+        //        state = "Open";
+        //        state += IsInline ? "Inline" : SelectedDisplayMode.ToString();
+        //    }
+        //    else
+        //    {
+        //        state = "Closed";
+        //        if (IsCompact)
+        //        {
+        //            state += "Compact";
+        //        }
+        //        //else
+        //        //{
+        //        //    return state;
+        //        //}
+        //    }
 
-            state += SelectedPlacement.ToString();
+        //    state += SelectedPlacement.ToString();
 
-            return state;
-        }
+        //    return state;
+        //}
         #endregion
 
         #region Register HamburgerMenuBarPaneOpen Event
@@ -269,7 +287,7 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
         }
         #endregion
 
-        #region Register ActiveContent Method
+        #region Register ActiveContents Method
         private async Task RegisterActiveContentAsync()
         {
             RegisterRightTabStrip();
@@ -290,8 +308,8 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
                 await CreateTopHamburgerMenuSideBarViewModelAsync();
                 LeftPaneActiveContentViewModel.Add(new()
                 {
-                    Name = "Root",
-                    Title = "Root",
+                    Name = "HamburgerMenuSideBarView",
+                    Title = "HamburgerMenuSideBarView",
                     ViewName = "Aksl.Modules.HamburgerMenuSideBar.Views.HamburgerMenuSideBarView,Aksl.Modules.HamburgerMenuSideBar",
                     ViewElement = new Views.HamburgerMenuSideBarView() { DataContext = TopHamburgerMenuSideBar }
                 }, true);
@@ -306,7 +324,6 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
 
             try
             {
-
                 var rootMenuItem = await _menuService.GetMenuAsync("All");
                 var subMenuItems = rootMenuItem.SubMenus;
                 // TopHamburgerMenuSideBar = await HamburgerMenuSideBarHelper.CreateTopHamburgerMenuSideBarViewModelAsync(subMenuItems);

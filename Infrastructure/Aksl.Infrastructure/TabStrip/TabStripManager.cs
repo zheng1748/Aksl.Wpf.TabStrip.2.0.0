@@ -1,120 +1,56 @@
-﻿using Aksl.ActiveContents;
-using Aksl.ActiveContents.ViewModels;
-using Aksl.Dialogs.Services;
-using Aksl.Infrastructure;
-using Aksl.Infrastructure.Events;
-using Aksl.Tabs;
+﻿using Aksl.Tabs;
 using Aksl.Tabs.ViewModels;
 using Aksl.Tabs.Views;
-using Aksl.Toolkit.Controls;
 using Prism;
-using Prism.Events;
+using Prism.Common;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Interop;
-using System.Xml.Linq;
+using System.Windows.Controls;
 using Unity;
 
-namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels;
+namespace Aksl.Infrastructure;
 
-public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
+public class TabStripManager
 {
-    #region Members
-    protected readonly IEventAggregator _eventAggregator;
-    private readonly IDialogViewService _dialogViewService;
-    private readonly IMenuService _menuService;
-    private readonly Aksl.Infrastructure.MenuItem _menuItem;
-    #endregion
-
     #region Constructors
-    public HamburgerMenuSideBarItemViewModel() : base()
+    public static TabStripManager Instance { get; }
+    static TabStripManager()
     {
-        _eventAggregator = PrismUnityExtensions.GetEventAggregator();
-        _dialogViewService = PrismUnityExtensions.GetDialogViewService();
-        _menuService = PrismUnityExtensions.GetMenuService();
-
-        _menuItem = null;
-    }
-
-    public HamburgerMenuSideBarItemViewModel(Aksl.Infrastructure.MenuItem menuItem, HamburgerMenuSideBarItemViewModel parent) : base(menuItem.Name, menuItem.Title, parent)
-    {
-        _eventAggregator = PrismUnityExtensions.GetEventAggregator();
-        _dialogViewService = PrismUnityExtensions.GetDialogViewService();
-        _menuService = PrismUnityExtensions.GetMenuService();
-
-        _menuItem = menuItem;
+        Instance = new TabStripManager();
     }
     #endregion
 
-    #region Properties
-    public Aksl.Infrastructure.MenuItem MenuItem => _menuItem;
-    public string NavigationName => _menuItem.NavigationName;
-    public bool IsSelectedOnInitialize => _menuItem.IsSelectedOnInitialize;
-    public PackIconKind IconKind =>
-                      _menuItem.IconKind.ToPackIconKind();
-    public bool HasSubMenu =>
-                       _menuItem.HasNextSubMenu();
-    public bool HasViewName =>
-                       _menuItem.HasViewName();
-    public bool IsAddViewToTabContent =>
-                                      IsLeaf;
-
-    public bool IsSelected
-    {
-        get;
-        set
-        {
-            if (SetProperty<bool>(ref field, value))
-            {
-                if (field && IsLeaf)
-                {
-                    AddViewToRightTabContent().Await();
-                }
-            }
-        }
-    } = false;
-
-    public bool IsPaneOpen
-    {
-        get => field;
-        set => SetProperty<bool>(ref field, value);
-    } = true;
-
-    public bool IsEnabled
-    {
-        get => field;
-
-        set => SetProperty<bool>(ref field, value);
-    } = true;
+    #region Create TabInformation Method
+  
     #endregion
 
-    #region Add View To RightTab Method
-    public async Task AddViewToRightTabContent()
+    #region Add View To Tab Content Method
+    public async Task AAddViewToRightTabContent(Infrastructure.MenuItem menuItem, TabViewModel topTabViewModel)
     {
-        var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuSideBar);
-
-        if (topTabViewModel.IsActiveTabItemByName(_menuItem.Name))
+        if (topTabViewModel.IsActiveTabItemByName(menuItem.Name))
         {
             return;
         }
 
-        if (_menuItem.HasNextSubMenu())
+        if (menuItem.HasNextSubMenu())
         {
-            CreateTopTabView(_menuItem, topTabViewModel);
+            CreateTopTabView(menuItem, topTabViewModel);
 
-            await AddSubTabViewAsync(_menuItem, topTabViewModel);
+            await AddSubTabViewAsync(menuItem, topTabViewModel);
         }
-        else if (_menuItem.HasViewName())
+        else if (menuItem.HasViewName())
         {
-            AddViewToTabContent(_menuItem, topTabViewModel);
+            AddViewToTabContent(menuItem, topTabViewModel);
         }
     }
 
@@ -153,7 +89,7 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
         {
             string msg = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
 
-            _dialogViewService.AlertAsync(message: $"Unable to find \"{msg}\".", title: $"Error:Missing Type").Await();
+            //_dialogViewService.AlertAsync(message: $"Unable to find \"{msg}\".", title: $"Error:Missing Type").Await();
         }
     }
 
@@ -323,5 +259,8 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
         return findTabView;
     }
     #endregion
-}
 
+    #region Add View To Content Method
+
+    #endregion
+}

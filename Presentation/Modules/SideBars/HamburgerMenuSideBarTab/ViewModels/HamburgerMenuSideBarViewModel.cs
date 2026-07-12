@@ -64,11 +64,11 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
             }
         } = false;
 
-        public bool IsLoading
-        {
-            get;
-            set => SetProperty<bool>(ref field, value);
-        } = false;
+        //public bool IsLoading
+        //{
+        //    get;
+        //    set => SetProperty<bool>(ref field, value);
+        //} = false;
         #endregion
 
         #region Register SelectedTabItem Empty Event

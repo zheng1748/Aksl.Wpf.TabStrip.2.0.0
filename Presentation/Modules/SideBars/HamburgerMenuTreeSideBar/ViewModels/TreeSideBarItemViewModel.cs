@@ -19,7 +19,7 @@ using Aksl.Infrastructure.Events;
 
 namespace Aksl.Modules.HamburgerMenuTreeSideBar.ViewModels
 {
-    public class TreeSideBarItemViewModel : NodeViewModel
+    public class TreeSideBarItemViewModel : Mvvm.NodeViewModel
     {
         #region Members
         protected readonly IEventAggregator _eventAggregator;

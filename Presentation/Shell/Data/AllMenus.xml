@@ -32,7 +32,6 @@
 			  Level="1"
 			  IconKind="Radar"
 			  IsCacheable="True"
-			  WorkspaceViewEventName=""
 		      ModuleName=""
 			  ViewName=""
 		      ActiveContentName=""
@@ -54,7 +53,7 @@
 		  Level="1"
 		  IconKind="Oar"
 		  IsCacheable="True"
-		  IsNextNavigation="True"
+		  IsNextNavigation="False"
 		  NavigationName="Others">
 	</MenuItem>
 </MenuItem>

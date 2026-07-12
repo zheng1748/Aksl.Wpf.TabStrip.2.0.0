@@ -13,18 +13,13 @@ namespace Aksl.Infrastructure;
 public static class ActiveContentManagerExtensions
 {
     #region Add View To Random Content Method
-    public static async Task AddViewToRandomContentAsync(Infrastructure.MenuItem menuItem, string activeContentName, NavigationParameters navigationParameters = null)
+    public static async Task AddViewToRandomContentAsync(Infrastructure.MenuItem menuItem, string activeContentName)
     {
         var randomActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<RandomActiveContentViewModel>(name: activeContentName);
 
-        if (navigationParameters is null)
-        {
-            navigationParameters = new() { { "CurrentMenuItem", menuItem } };
-        }
-
         try
         {
-            await ActiveContentManager.Instance.AddViewToRandomContentAsync(menuItem, randomActiveContentViewModel, navigationParameters);
+            await ActiveContentManager.Instance.AddViewToRandomContentAsync(menuItem, randomActiveContentViewModel);
         }
         catch (Exception ex)
         {
@@ -38,20 +33,23 @@ public static class ActiveContentManagerExtensions
     #region Navigation To Random Content Method
     public static async Task NavigationToRandomContentAsync(Infrastructure.MenuItem menuItem, string activeContentName, NavigationParameters navigationParameters = null)
     {
-        await AddViewToRandomContentAsync(menuItem, activeContentName, navigationParameters);
+        var randomActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<RandomActiveContentViewModel>(name: activeContentName);
 
-        //var randomActiveContentViewModel = PrismIocExtensions.GetContainer().Resolve<RandomActiveContentViewModel>(name: activeContentName);
+        if (navigationParameters is null)
+        {
+            navigationParameters = new() { { "CurrentMenuItem", menuItem } };
+        }
 
-        //try
-        //{
-        //    await ActiveContentManager.Instance.AddViewToRandomContentAsync(menuItem, randomActiveContentViewModel, navigationParameters);
-        //}
-        //catch (Exception ex)
-        //{
-        //    string msg = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
+        try
+        {
+            await ActiveContentManager.Instance.NavigationToRandomContentAsync(menuItem, randomActiveContentViewModel, navigationParameters);
+        }
+        catch (Exception ex)
+        {
+            string msg = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
 
-        //    throw new Exception(msg);
-        //}
+            throw new Exception(msg);
+        }
     }
     #endregion
 
@@ -74,7 +72,7 @@ public static class ActiveContentManagerExtensions
     #endregion
 
     #region Navigation To Sequence Content Method
-    public static async Task NavigationToSequenceContentAsync(Infrastructure.MenuItem menuItem, string activeContentName, NavigationParameters navigationParameters )
+    public static async Task NavigationToSequenceContentAsync(Infrastructure.MenuItem menuItem, string activeContentName, NavigationParameters navigationParameters)
     {
         await AddViewToSequenceContentAsync(menuItem, activeContentName, navigationParameters);
     }

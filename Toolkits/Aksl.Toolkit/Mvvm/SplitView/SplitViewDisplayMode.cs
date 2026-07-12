@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aksl.Modules.HamburgerMenuSideBarTab
+namespace Aksl.Mvvm
 {
     public enum SplitViewDisplayMode
     {
