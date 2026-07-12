@@ -32,10 +32,11 @@
 			  Name="Thermometers"
 			  Title="温度计"
 			  Level="1"
-		  IconKind="ThermometerAlert"  IsCacheable="True"
+		  IconKind="ThermometerAlert"  
+			  IsCacheable="True"
 			  ModuleName=""
 			  ViewName=""
-			  IsNextNavigation="True"
+			  IsNextNavigation="False"
 			  NavigationName="Thermometers">
 	</MenuItem>
 	<MenuItem Id="1"
@@ -45,7 +46,7 @@
 		  IconKind="HeatCool"  IsCacheable="True"
 			  ModuleName=""
 			  ViewName=""
-			  IsNextNavigation="True"
+			  IsNextNavigation="False"
 			  NavigationName="CoolingTowers">
 	</MenuItem>
 	<MenuItem Id="1"
@@ -55,7 +56,7 @@
 		  IconKind="Compress"  IsCacheable="True"
 			  ModuleName=""
 			  ViewName=""
-		      IsNextNavigation="True"
+		       IsNextNavigation="False"
 			  NavigationName="AirCompressers">
 	</MenuItem>
 </MenuItem>

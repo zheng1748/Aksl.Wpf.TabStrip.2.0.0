@@ -121,9 +121,9 @@
     <ProjectReference Include="..\Modules\Industry\ThermometerrView\ThermometerView.csproj" />
     <ProjectReference Include="..\Modules\Others\OthersView\OthersView.csproj" />
     <ProjectReference Include="..\Modules\Radars\RadarMapView.csproj" />
-    <ProjectReference Include="..\Modules\SideBars\HamburgerMenuNavigationSideBar\HamburgerMenuNavigationSideBarTab.csproj" />
+    <ProjectReference Include="..\Modules\SideBars\HamburgerMenuNavigationSideBarTab\HamburgerMenuNavigationSideBarTab.csproj" />
     <ProjectReference Include="..\Modules\SideBars\HamburgerMenuSideBarTab\HamburgerMenuSideBarTab.csproj" />
-    <ProjectReference Include="..\Modules\SideBars\HamburgerMenuTreeSideBar\HamburgerMenuTreeSideBar.csproj" />
+    <ProjectReference Include="..\Modules\SideBars\HamburgerMenuTreeSideBarTab\HamburgerMenuTreeSideBarTab.csproj" />
   </ItemGroup>
 
   <ItemGroup>

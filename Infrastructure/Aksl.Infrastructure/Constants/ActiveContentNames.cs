@@ -15,5 +15,7 @@
         public const string RightContentHamburgerMenuTreeSideBar = "RightContentHamburgerMenuTreeSideBarView";
 
         public const string TabStripHamburgerMenuSideBar = "TabStripHamburgerMenuSideBarViewModel";
+        public const string TabStripHamburgerMenuNavigationSideBar = "TabStripHamburgerMenuNavigationSideBarViewModel";
+        public const string TabStripHamburgerMenuTreeSideBar = "TabStripHamburgerMenuTreeSideBarViewModel";
     }
 }

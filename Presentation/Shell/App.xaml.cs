@@ -8,7 +8,7 @@ using Aksl.Modules.AirCompresser;
 using Aksl.Modules.CoolingTower;
 using Aksl.Modules.HamburgerMenuSideBarTab;
 using Aksl.Modules.HamburgerMenuNavigationSideBarTab;
-using Aksl.Modules.HamburgerMenuTreeSideBar;
+using Aksl.Modules.HamburgerMenuTreeSideBarTab;
 using Aksl.Modules.Home;
 using Aksl.Modules.Others;
 using Aksl.Modules.Pipeline;

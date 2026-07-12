@@ -23,7 +23,7 @@
 			  ModuleName=""
 			  IsNexApplication="False"   
 			  IsNexOnNotLeaf="True"
-	          IsNextNavigation="False"
+	          IsNextNavigation="True"
 			  NavigationName="Industry">
 	</MenuItem>
 	<MenuItem Id="3"
@@ -35,7 +35,7 @@
 		      ModuleName=""
 			  ViewName=""
 		      ActiveContentName=""
-			  IsNextNavigation="False"
+			  IsNextNavigation="True"
 			  NavigationName="Radars">
 	</MenuItem>
 	<MenuItem Id="5"
@@ -44,7 +44,7 @@
 			  Level="1"
 			  IconKind="AccountCowboyHat"
 			  IsCacheable="True"
-		      IsNextNavigation="True"
+		     IsNextNavigation="True"
 			  NavigationName="Accounts">
 	</MenuItem>
 	<MenuItem Id="5"
@@ -53,7 +53,7 @@
 		  Level="1"
 		  IconKind="Oar"
 		  IsCacheable="True"
-		  IsNextNavigation="False"
+		  IsNextNavigation="True"
 		  NavigationName="Others">
 	</MenuItem>
 </MenuItem>
