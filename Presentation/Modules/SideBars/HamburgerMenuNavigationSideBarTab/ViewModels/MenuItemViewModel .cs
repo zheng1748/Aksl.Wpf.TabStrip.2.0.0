@@ -130,7 +130,21 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
                 var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuNavigationSideBar);
                 if (topTabViewModel is not null)
                 {
-                    await TabStripManager.Instance.AddViewToRightTabContent(_menuItem, topTabViewModel);
+                    if (topTabViewModel.IsActiveTabItemByName(_menuItem.Name))
+                    {
+                        return;
+                    }
+
+                    if (_menuItem.HasNextSubMenu())
+                    {
+                        TabStripManager.Instance.CreateTopTabView(_menuItem, topTabViewModel);
+
+                        await TabStripManager.Instance.AddSubTabViewAsync(_menuItem, topTabViewModel);
+                    }
+                    else if (_menuItem.HasViewName())
+                    {
+                        TabStripManager.Instance.AddViewToTabContent(_menuItem, topTabViewModel);
+                    }
                 }
             }
             catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))

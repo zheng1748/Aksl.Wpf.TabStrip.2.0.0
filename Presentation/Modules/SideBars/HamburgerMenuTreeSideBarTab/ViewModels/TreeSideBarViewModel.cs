@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Aksl.Infrastructure;
+using Aksl.Tabs;
+using Prism.Events;
+using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Prism.Events;
-using Prism.Mvvm;
-
-using Aksl.Infrastructure;
 
 namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
 {
@@ -25,16 +24,22 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
             _eventAggregator = PrismUnityExtensions.GetEventAggregator();
 
             TopTreeSideBarItems = new();
+
+            RegisterActiveTabItemEvent();
+            RegisterOnSelectedTabItemEmptyEvent();
         }
 
-        public TreeSideBarViewModel(IEventAggregator eventAggregator, IMenuService menuService)
-        {
-            _eventAggregator = eventAggregator;
-            _menuService = menuService;
+        //public TreeSideBarViewModel(IEventAggregator eventAggregator, IMenuService menuService)
+        //{
+        //    _eventAggregator = eventAggregator;
+        //    _menuService = menuService;
 
-            TopTreeSideBarItems = new();
-            // AllTreeSideBarItems = new();
-        }
+        //    TopTreeSideBarItems = new();
+        //    // AllTreeSideBarItems = new();
+
+        //    RegisterActiveTabItemEvent();
+        //    RegisterOnSelectedTabItemEmptyEvent();
+        //}
         #endregion
 
         #region Properties
@@ -62,6 +67,175 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
             get => field;
             set => SetProperty<bool>(ref field, value);
         } = false;
+        #endregion
+
+        #region Get Selected TreeSideBarItemViewModel Method
+        private TreeSideBarItemViewModel GetSelectedTreeSideBarItemViewModel()
+        {
+            TreeSideBarItemViewModel findTreeSideBarItemViewModel = null;
+
+            foreach (var tbi in TopTreeSideBarItems)
+            {
+                if (findTreeSideBarItemViewModel is null)
+                {
+                    RecursiveSubMenuItem(tbi);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            void RecursiveSubMenuItem(TreeSideBarItemViewModel curentTreeSideBarItemViewModel)
+            {
+                //if (curentTreeSideBarItemViewModel.IsLeaf && curentTreeSideBarItemViewModel.IsSelected)
+                if (curentTreeSideBarItemViewModel.IsSelected)
+                {
+                    findTreeSideBarItemViewModel = curentTreeSideBarItemViewModel;
+                    return;
+                }
+
+                if (curentTreeSideBarItemViewModel.HasChildren)
+                {
+                    foreach (var tbvm in curentTreeSideBarItemViewModel.Children)
+                    {
+                        RecursiveSubMenuItem(tbvm as TreeSideBarItemViewModel);
+                    }
+                }
+            }
+
+            return findTreeSideBarItemViewModel;
+        }
+        #endregion
+
+        #region Findt TreeSideBarItemViewModel Method
+        private TreeSideBarItemViewModel FindtTreeSideBarItemViewModel(TabInformation tabInformation)
+        {
+            TreeSideBarItemViewModel findTreeSideBarItemViewModel = null;
+
+            foreach (var tbi in TopTreeSideBarItems)
+            {
+                if (findTreeSideBarItemViewModel is null)
+                {
+                    RecursiveSubMenuItem(tbi);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            void RecursiveSubMenuItem(TreeSideBarItemViewModel curentTreeSideBarItemViewModel)
+            {
+                if (IsEqualsNameOrTitle(curentTreeSideBarItemViewModel.Name, tabInformation.Name) || IsEqualsNameOrTitle(curentTreeSideBarItemViewModel.Title, tabInformation.Title))
+                {
+                    findTreeSideBarItemViewModel = curentTreeSideBarItemViewModel;
+                    return;
+                }
+
+                if (curentTreeSideBarItemViewModel.HasChildren)
+                {
+                    foreach (var tbvm in curentTreeSideBarItemViewModel.Children)
+                    {
+                        RecursiveSubMenuItem(tbvm as TreeSideBarItemViewModel);
+                    }
+                }
+            }
+
+            return findTreeSideBarItemViewModel;
+        }
+        #endregion
+
+        #region Register SelectedTabItem Empty Event
+        private void RegisterOnSelectedTabItemEmptyEvent()
+        {
+            var dialogViewService = PrismUnityExtensions.GetDialogViewService();
+
+            _eventAggregator.GetEvent<OnSelectedTabItemEmptyEvent>().Subscribe(async (oatie) =>
+            {
+                try
+                {
+                    var selectedTreeSideBarItem = GetSelectedTreeSideBarItemViewModel();
+                    if (selectedTreeSideBarItem is not null)
+                    {
+                        selectedTreeSideBarItem.IsSelected = false;
+                        selectedTreeSideBarItem = null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await dialogViewService.AlertAsync(message: $"Exception : \"{ex.Message}\"", title: "Error: Selected TabItem Is Empty");
+                }
+            }, ThreadOption.UIThread, true);
+        }
+        #endregion
+
+        #region Register Active TabItem Event
+        private void RegisterActiveTabItemEvent()
+        {
+            var dialogViewService = PrismUnityExtensions.GetDialogViewService();
+
+            _eventAggregator.GetEvent<OnActiveTabItemEvent>().Subscribe(async (oatie) =>
+            {
+                var currentTabInfo = oatie.SelectedTabInfo;
+
+                try
+                {
+                    SetSelectedTreeSideBarItem();
+
+                    #region Set Selected TreeSideBarItem Method
+                    void SetSelectedTreeSideBarItem()
+                    {
+                        #region Method
+                        //var treeSideBarItem = FindtTreeSideBarItemViewModel(currentTabInfo);
+
+                        //var selectedTreeSideBarItem = GetSelectedTreeSideBarItemViewModel();
+                        //Debug.Assert(selectedTreeSideBarItem == _selectedTreeSideBarItem);
+
+                        //if (treeSideBarItem is not null)
+                        //{
+                        //    if (treeSideBarItem != selectedTreeSideBarItem)
+                        //    {
+                        //        treeSideBarItem.IsSelected = true;
+                        //        treeSideBarItem.IsExpanded = true;
+
+                        //        if (selectedTreeSideBarItem is not null)
+                        //        {
+                        //            selectedTreeSideBarItem.IsSelected = false;
+                        //        }
+                        //    }
+                        //}
+                        #endregion
+
+                        var matchTreeSideBarItem = FindtTreeSideBarItemViewModel(currentTabInfo);
+
+                        var selectedTreeSideBarItem = GetSelectedTreeSideBarItemViewModel();
+                        Debug.Assert(selectedTreeSideBarItem == SelectedTreeSideBarItem);
+
+                        if (matchTreeSideBarItem is not null)
+                        {
+                            if (matchTreeSideBarItem == selectedTreeSideBarItem)
+                            {
+                                return;
+                            }
+
+                            if (selectedTreeSideBarItem is not null)
+                            {
+                                selectedTreeSideBarItem.IsSelected = false;
+                            }
+
+                            matchTreeSideBarItem.IsSelected = true;
+                            matchTreeSideBarItem.IsExpanded = true;
+                        }
+                    }
+                    #endregion
+                }
+                catch (Exception ex)
+                {
+                    await dialogViewService.AlertAsync(message: $"Exception : \"{ex.Message}\"", title: "Error: Active TabItem");
+                }
+            }, ThreadOption.UIThread, true);
+        }
         #endregion
 
         #region Reset/Clear Selected TreeSideBarItem Method

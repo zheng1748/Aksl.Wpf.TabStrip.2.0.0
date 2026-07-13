@@ -89,7 +89,7 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
 
                     if (field && IsLeaf)
                     {
-                        AddViewToRightTabContentCore().Await();
+                        AddViewToRightTabContent().Await();
                     }
                 }
             }
@@ -132,7 +132,7 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
         #endregion
 
         #region Add View To RightTab Method
-        private async Task AddViewToRightTabContentCore()
+        private async Task AddViewToRightTabContent()
         {
             var dialogViewService = PrismUnityExtensions.GetDialogViewService();
 
@@ -141,7 +141,21 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
                 var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuTreeSideBar);
                 if (topTabViewModel is not null)
                 {
-                    await TabStripManager.Instance.AddViewToRightTabContent(_menuItem, topTabViewModel);
+                    if (topTabViewModel.IsActiveTabItemByName(_menuItem.Name))
+                    {
+                        return;
+                    }
+
+                    if (_menuItem.HasNextSubMenu())
+                    {
+                        TabStripManager.Instance.CreateTopTabView(_menuItem, topTabViewModel);
+
+                        await TabStripManager.Instance.AddSubTabViewAsync(_menuItem, topTabViewModel);
+                    }
+                    else if (_menuItem.HasViewName())
+                    {
+                        TabStripManager.Instance.AddViewToTabContent(_menuItem, topTabViewModel);
+                    }
                 }
             }
             catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))

@@ -1,4 +1,5 @@
-﻿using Aksl.Tabs;
+﻿using Aksl.ActiveContents;
+using Aksl.Tabs;
 using Aksl.Tabs.ViewModels;
 using Aksl.Tabs.Views;
 using Prism;
@@ -31,30 +32,67 @@ public class TabStripManager
     #endregion
 
     #region Create TabInformation Method
+    public TabInformation CreateTabInformation(string name, string title, string viewTypeAssemblyQualifiedName, NavigationParameters navigationParameters)
+    {
+        Type viewType = Type.GetType(viewTypeAssemblyQualifiedName);
+        if (viewType is null)
+        {
+            throw new ArgumentException($"Missing Type {viewTypeAssemblyQualifiedName}");
+        }
+        var viewName = viewType.Name;
 
+        var unityContainer = PrismIocExtensions.GetUnityContainer();
+        var regionNavigationService = unityContainer.Resolve<IRegionNavigationService>();
+
+        TabInformation tabInfo = new()
+        {
+            Name = name,
+            Title = title,
+            ViewName = viewTypeAssemblyQualifiedName
+        };
+
+        var registeredView = unityContainer.Resolve<object>(viewName);
+        if (registeredView is FrameworkElement frameworkElement)
+        {
+            MvvmHelpers.AutowireViewModel(registeredView);
+
+            NavigationContext navigationContext = new(regionNavigationService, new Uri(viewName, UriKind.RelativeOrAbsolute))
+            {
+                Parameters = navigationParameters
+            };
+
+            Action<INavigationAware> action = (n) => n.OnNavigatedTo(navigationContext);
+            MvvmHelpers.ViewAndViewModelAction<INavigationAware>(registeredView, action);
+
+            tabInfo.ViewName = null;
+            tabInfo.ViewElement = frameworkElement;
+        }
+
+        return tabInfo;
+    }
     #endregion
 
     #region Add View To Tab Content Method
-    public async Task AddViewToRightTabContent(Infrastructure.MenuItem menuItem, TabViewModel topTabViewModel)
-    {
-        if (topTabViewModel.IsActiveTabItemByName(menuItem.Name))
-        {
-            return;
-        }
+    //public async Task AddViewToRightTabContent(Infrastructure.MenuItem menuItem, TabViewModel topTabViewModel)
+    //{
+    //    if (topTabViewModel.IsActiveTabItemByName(menuItem.Name))
+    //    {
+    //        return;
+    //    }
 
-        if (menuItem.HasNextSubMenu())
-        {
-            CreateTopTabView(menuItem, topTabViewModel);
+    //    if (menuItem.HasNextSubMenu())
+    //    {
+    //        CreateTopTabView(menuItem, topTabViewModel);
 
-            await AddSubTabViewAsync(menuItem, topTabViewModel);
-        }
-        else if (menuItem.HasViewName())
-        {
-            AddViewToTabContent(menuItem, topTabViewModel);
-        }
-    }
+    //        await AddSubTabViewAsync(menuItem, topTabViewModel);
+    //    }
+    //    else if (menuItem.HasViewName())
+    //    {
+    //        AddViewToTabContentInternal(menuItem, topTabViewModel);
+    //    }
+    //}
 
-    private void AddViewToTabContent(MenuItem menuItem, TabViewModel topTabViewModel)
+    public void AddViewToTabContent(MenuItem menuItem, TabViewModel topTabViewModel)
     {
         try
         {
@@ -93,7 +131,7 @@ public class TabStripManager
         }
     }
 
-    private void CreateTopTabView(MenuItem menuItem, TabViewModel tabViewModel)
+    public void CreateTopTabView(MenuItem menuItem, TabViewModel tabViewModel)
     {
         TabInformation topTabInfo = new()
         {
@@ -150,7 +188,7 @@ public class TabStripManager
         }
     }
 
-    private async Task AddSubTabViewAsync(MenuItem menuItem, TabViewModel topTabViewModel)
+    public async Task AddSubTabViewAsync(MenuItem menuItem, TabViewModel topTabViewModel)
     {
         await RecursiveSubMenuItemViewModelAsync(menuItem, topTabViewModel);
 
