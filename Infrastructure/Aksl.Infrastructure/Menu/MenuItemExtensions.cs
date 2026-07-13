@@ -62,7 +62,7 @@ namespace Aksl.Infrastructure
 
             if (viewType is null)
             {
-                throw new ArgumentException($"Missing Type {menuItem.ViewName}");
+                throw new ArgumentException($"Missing Type \"{menuItem.ViewName}\"");
             }
 
             return viewType.Name;

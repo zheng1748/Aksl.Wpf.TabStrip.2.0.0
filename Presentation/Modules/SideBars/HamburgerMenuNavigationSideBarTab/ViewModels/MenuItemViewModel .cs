@@ -1,4 +1,5 @@
-﻿using Aksl.Dialogs.Services;
+﻿using Aksl.ActiveContents.ViewModels;
+using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
 using Aksl.Tabs;
@@ -18,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using Unity;
 
 namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
@@ -75,10 +77,9 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
         #endregion
 
         #region Properties
-        public MenuItem MenuItem => _menuItem;
+        public Infrastructure.MenuItem MenuItem => _menuItem;
         public int GroupIndex { get; set; }
         public int Index { get; set; }
-        public string WorkspaceViewEventName { get; set; }
         private bool IsNextNavigation => _menuItem.IsNextNavigation;
         private bool HasNavigationName => !string.IsNullOrEmpty(_menuItem.NavigationName);
         private bool IsNexOnNotLeaf => _menuItem.IsNexOnNotLeaf;
@@ -96,7 +97,8 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
                 {
                     if (field && IsLeaf)
                     {
-                        AddViewToRightTabContent().Await();
+                       //AddViewToRightTabContent().Await();
+                        AddViewToRightTabContentCore().Await();
                     }
                 }
             }
@@ -115,6 +117,30 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
         {
             get => field;
             set => SetProperty<bool>(ref field, value);
+        }
+        #endregion
+
+        #region Add View To RightTab Method
+        private async Task AddViewToRightTabContentCore()
+        {
+            var dialogViewService = PrismUnityExtensions.GetDialogViewService();
+
+            try
+            {
+                var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuNavigationSideBar);
+                if (topTabViewModel is not null)
+                {
+                    await TabStripManager.Instance.AddViewToRightTabContent(_menuItem, topTabViewModel);
+                }
+            }
+            catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
+            {
+                await dialogViewService.AlertAsync(message: $"{ex.InnerException.Message}", title: $"Error:Add Ta View");
+            }
+            catch (Exception ex)
+            {
+                await dialogViewService.AlertAsync(message: $"{ex.Message}", title: $"Error:Add Ta View");
+            }
         }
         #endregion
 

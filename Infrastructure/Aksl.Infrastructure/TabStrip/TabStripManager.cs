@@ -31,11 +31,11 @@ public class TabStripManager
     #endregion
 
     #region Create TabInformation Method
-  
+
     #endregion
 
     #region Add View To Tab Content Method
-    public async Task AAddViewToRightTabContent(Infrastructure.MenuItem menuItem, TabViewModel topTabViewModel)
+    public async Task AddViewToRightTabContent(Infrastructure.MenuItem menuItem, TabViewModel topTabViewModel)
     {
         if (topTabViewModel.IsActiveTabItemByName(menuItem.Name))
         {
@@ -89,7 +89,7 @@ public class TabStripManager
         {
             string msg = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
 
-            //_dialogViewService.AlertAsync(message: $"Unable to find \"{msg}\".", title: $"Error:Missing Type").Await();
+            throw new Exception(msg);
         }
     }
 
@@ -195,30 +195,41 @@ public class TabStripManager
                         }
                         else if (lmi.HasViewName())
                         {
-                            Aksl.Tabs.TabInformation subTabInformation = new()
+                            try
                             {
-                                Name = lmi.Name,
-                                Title = lmi.Title,
-                                IconKind = lmi.IconKind,
-                                ViewName = lmi.ViewName,
-                                CloseTabButtonVisibility = Visibility.Collapsed
-                            };
+                                var viewTypeName = lmi.GetViewTypeName();
 
-                            var currentView = subTabViewModel.GetStoreViewElementByName(lmi.Name);
-                            if (currentView is not null)
-                            {
-                                if (lmi.IsCacheable)
+                                Aksl.Tabs.TabInformation subTabInformation = new()
                                 {
+                                    Name = lmi.Name,
+                                    Title = lmi.Title,
+                                    IconKind = lmi.IconKind,
+                                    ViewName = lmi.ViewName,
+                                    CloseTabButtonVisibility = Visibility.Collapsed
+                                };
+
+                                var currentView = subTabViewModel.GetStoreViewElementByName(lmi.Name);
+                                if (currentView is not null)
+                                {
+                                    if (lmi.IsCacheable)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        subTabViewModel.RetsetTabItemNoActive(subTabInformation);
+                                    }
                                 }
                                 else
                                 {
-                                    subTabViewModel.RetsetTabItemNoActive(subTabInformation);
+                                    subTabViewModel.Add(subTabInformation, false);
+                                    isSetFirst = true;
                                 }
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                subTabViewModel.Add(subTabInformation, false);
-                                isSetFirst = true;
+                                string msg = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
+
+                                throw new Exception(msg);
                             }
                         }
                     }
@@ -258,9 +269,5 @@ public class TabStripManager
 
         return findTabView;
     }
-    #endregion
-
-    #region Add View To Content Method
-
     #endregion
 }

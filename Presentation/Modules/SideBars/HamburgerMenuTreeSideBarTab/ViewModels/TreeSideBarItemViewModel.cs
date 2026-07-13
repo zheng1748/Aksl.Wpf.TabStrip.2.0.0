@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using Aksl.Infrastructure;
+using Aksl.Tabs.ViewModels;
+using Aksl.Toolkit.Controls;
 using Prism;
 using Prism.Commands;
 using Prism.Events;
@@ -10,11 +8,11 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Unity;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using Unity;
-
-using Aksl.Toolkit.Controls;
-
-using Aksl.Infrastructure;
 
 namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
 {
@@ -88,17 +86,10 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
                 if (SetProperty<bool>(ref field, value))
                 {
                     int level = Level;
-                    if (field)
-                    {
-                        if (field && IsAddViewToRightContent)
-                        {
-                            AddViewToRightContent();
-                        }
 
-                        if (field && IsNavigationToRightContent)
-                        {
-                            NavigationToRightContent();
-                        }
+                    if (field && IsLeaf)
+                    {
+                        AddViewToRightTabContentCore().Await();
                     }
                 }
             }
@@ -140,6 +131,30 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
         } = true;
         #endregion
 
+        #region Add View To RightTab Method
+        private async Task AddViewToRightTabContentCore()
+        {
+            var dialogViewService = PrismUnityExtensions.GetDialogViewService();
+
+            try
+            {
+                var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuTreeSideBar);
+                if (topTabViewModel is not null)
+                {
+                    await TabStripManager.Instance.AddViewToRightTabContent(_menuItem, topTabViewModel);
+                }
+            }
+            catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
+            {
+                await dialogViewService.AlertAsync(message: $"{ex.InnerException.Message}", title: $"Error:Add Ta View");
+            }
+            catch (Exception ex)
+            {
+                await dialogViewService.AlertAsync(message: $"{ex.Message}", title: $"Error:Add Ta View");
+            }
+        }
+        #endregion
+
         #region Add View To RightContent Method
         public void AddViewToRightContent()
         {
@@ -149,7 +164,7 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
             {
                 System.Windows.Application.Current?.Dispatcher.Invoke(async () =>
                 {
-                    await dialogViewService.AlertAsync(message: $"{ex.Message} \".", title: $"Error:Add View");
+                    await dialogViewService.AlertAsync(message: $"{ex.Message}", title: $"Error:Add View");
                 });
             });
         }

@@ -3,6 +3,7 @@ using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
 using Aksl.Mvvm;
+using Aksl.Tabs.ViewModels;
 using Prism;
 using Prism.Events;
 using Prism.Ioc;
@@ -50,7 +51,11 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
         #endregion
 
         #region Properties
-        public RandomActiveContentViewModel RightContentActiveContentViewModel { get; set; }
+        public TabViewModel TabStripViewModel
+        {
+            get => field;
+            set => SetProperty(ref field, value);
+        }
         public TreeSideBarViewModel TreeSideBar { get; private set; }
 
         public bool IsLoading
@@ -80,10 +85,14 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
         #region Register ActiveContents Method
         private void RegisterActiveContent()
         {
-            _container.RegisterSingleton(from: typeof(RandomActiveContentViewModel), to: typeof(RandomActiveContentViewModel), name: ActiveContentNames.RightContentHamburgerMenuTreeSideBar);
-            var rightContentActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<RandomActiveContentViewModel>(name: ActiveContentNames.RightContentHamburgerMenuTreeSideBar);
+            RegisterRightTabStrip();
+            void RegisterRightTabStrip()
+            {
+                _container.RegisterSingleton(from: typeof(TabViewModel), to: typeof(TabViewModel), name: ActiveContentNames.TabStripHamburgerMenuTreeSideBar);
+                var tabStripViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuTreeSideBar);
 
-            RightContentActiveContentViewModel = rightContentActiveContentViewModel;
+                TabStripViewModel = tabStripViewModel;
+            }
         }
         #endregion
 
