@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -30,12 +31,12 @@ public class WebApiProvider
     #endregion
 
     #region Constructors
-    public WebApiProvider(IHttpClientFactory httpClientFactory,ILogger<WebApiProvider> logger)
+    public WebApiProvider(IHttpClientFactory httpClientFactory, ILogger<WebApiProvider> logger)
     {
-        _httpClientFactory = httpClientFactory ?? throw new ArgumentException("HttpClientFactory is not null"); 
-        _logger = logger?? NullLoggerFactory.Instance.CreateLogger<WebApiProvider>();
+        _httpClientFactory = httpClientFactory ?? throw new ArgumentException("HttpClientFactory is not null");
+        _logger = logger ?? NullLoggerFactory.Instance.CreateLogger<WebApiProvider>();
 
-        HeaderProperties=new();
+        HeaderProperties = new();
     }
     #endregion
 
@@ -44,26 +45,40 @@ public class WebApiProvider
 
     public void SetBearer(string accessToken, string refreshToken)
     {
-        AccessToken=accessToken;
+        Debug.Assert(AccessToken != accessToken);
+
+        AccessToken = accessToken;
         RefreshToken = refreshToken;
-        //HeaderProperties.SetString("Authorization", $"Bearer {accessToken}");
+
         SetHeader("Authorization", $"Bearer {accessToken}");
     }
 
     public void SetHeader(string key, string value)
     {
+        if (HeaderProperties.Parameters.ContainsKey(key))
+        {
+            HeaderProperties.Parameters.Remove(key);
+        }
         HeaderProperties.SetString(key, value);
+    }
+
+    public void ClearHeader()
+    {
+        AccessToken = null; AccessTokenExpire = null;
+        RefreshToken = null; RefreshTokenExpire = null;
+
+        HeaderProperties.Parameters.Clear();
     }
 
     public string? AccessToken { get; set; }
     public DateTime? AccessTokenExpire { get; set; }
-    public DateTime? RefreshTokenExpire { get; set; }
     public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpire { get; set; }
     public bool IsAccessTokenExpired
     {
         get
         {
-            return  DateTime.UtcNow > AccessTokenExpire;
+            return DateTime.UtcNow > AccessTokenExpire;
         }
     }
     public bool IsRefreshTokenExpire
@@ -76,14 +91,14 @@ public class WebApiProvider
     #endregion
 
     #region Get Method
-    public async Task<TResponse> GetAsync<TResponse>(string requestUrl,int timeoutSecond = 180, CancellationToken cancellationToken = default)
+    public async Task<TResponse> GetAsync<TResponse>(string requestUrl, int timeoutSecond = 180, CancellationToken cancellationToken = default)
     {
         var httpClient = CreateHttpClient(HeaderProperties, timeoutSecond);
 
         var response = await httpClient.GetAsync(requestUrl);
         if (response.IsSuccessStatusCode)
         {
-            return await  response.Content.ReadFromJsonAsync<TResponse>();
+            return await response.Content.ReadFromJsonAsync<TResponse>();
         }
         else
         {
@@ -95,13 +110,13 @@ public class WebApiProvider
     #endregion
 
     #region Post Method
-    public async Task<TResponse> PostAsync<TResponse, TValue>( string requestUrl, TValue value, int timeoutSecond = 180, CancellationToken cancellationToken = default)
+    public async Task<TResponse> PostAsync<TResponse, TValue>(string requestUrl, TValue value, int timeoutSecond = 180, CancellationToken cancellationToken = default)
     {
         var httpClient = CreateHttpClient(HeaderProperties, timeoutSecond);
         var response = await httpClient.PostAsJsonAsync<TValue>(requestUrl, value, cancellationToken);
 
         //response.EnsureSuccessStatusCode();
-       // return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
+        // return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -145,7 +160,7 @@ public class WebApiProvider
     public async Task<TResponse> DeleteAsync<TResponse, TValue>(string requestUrl, TValue value, int timeoutSecond = 180, CancellationToken cancellationToken = default)
     {
         var httpClient = CreateHttpClient(HeaderProperties, timeoutSecond);
-        var response = await httpClient.DeleteAsync(requestUrl,cancellationToken);
+        var response = await httpClient.DeleteAsync(requestUrl, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {

@@ -37,11 +37,11 @@ public class LoginHandler
     #endregion
 
     #region Constructors
-    public LoginHandler(WebApiProvider webApiProvider, IOptions<WebApiAddressSettings> webApiAddressOption,ILogger<LoginHandler> logger)
+    public LoginHandler(WebApiProvider webApiProvider, IOptions<WebApiAddressSettings> webApiAddressOption, ILogger<LoginHandler> logger)
     {
         WebApiProvider = webApiProvider;
-       _webApiAddressSettings = webApiAddressOption.Value;
-       _logger = logger;
+        _webApiAddressSettings = webApiAddressOption.Value;
+        _logger = logger;
 
         BuildActions();
     }
@@ -49,18 +49,18 @@ public class LoginHandler
 
     #region Properties
     public WebApiProvider WebApiProvider { get; set; }
-    public Action<string,string> BindAccessTokenAction { get; set; }
+    public Action<string, string> BindAccessTokenAction { get; set; }
     public Func<string, string, Task<LoginResponse>> ExecuteLoginAction { get; set; }
     public Func<string, Task<LoginOutResponse>> ExecuteLoginOutAction { get; set; }
     public Func<string, string, Task<RefreshTokenResponse>> ExecuteRefreshTokenAction { get; set; }
-    public Func<string,Task<ResetLockoutResponse>> ExecuteResetLockoutAction { get; set; }
+    public Func<string, Task<ResetLockoutResponse>> ExecuteResetLockoutAction { get; set; }
     public Func<HttpQueryKeyValuePair[], Task<GenerateEmailTokenResponse>> ExecuteGetEmailConfirmationTokenAction { get; set; }
     #endregion
 
     #region Build Action Method
     public void BuildActions()
     {
-        BindAccessTokenAction = (ak,rk) => WebApiProvider.SetBearer(ak, rk);
+        BindAccessTokenAction = (ak, rk) => WebApiProvider.SetBearer(ak, rk);
         ExecuteLoginAction = LoginAsync;
         ExecuteLoginOutAction = LoginOutAsync;
         ExecuteRefreshTokenAction = RefreshTokenAsync;
@@ -72,30 +72,33 @@ public class LoginHandler
     #region Login Method
     public async Task<LoginResponse> LoginAsync(string userName, string password)
     {
-        var loginResponse = await WebApiProvider.PostAsync<LoginResponse, LoginRequest>(_webApiAddressSettings.LoginUrl, 
-                                        new LoginRequest() { UserName = userName, Password = password ,RefreshToken=WebApiProvider.RefreshToken });
+        var loginResponse = await WebApiProvider.PostAsync<LoginResponse, LoginRequest>(_webApiAddressSettings.LoginUrl,
+                                        new LoginRequest() { UserName = userName, Password = password, RefreshToken = WebApiProvider.RefreshToken });
 
         if (loginResponse.Succeeded && !string.IsNullOrEmpty(loginResponse.AccessToken))
         {
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(loginResponse.AccessToken);
             //WebApiProvider.AccessTokenExpire = jwtToken.ValidTo.ToUniversalTime();
-            
+
             long accessTokenExpiryDate = long.Parse(jwtToken.Claims.FirstOrDefault(static x => x.Type == JwtRegisteredClaimNames.Exp).Value);
             var accessTokenUtcExpiryDate = Toolkit.DateTimeExtensions.UnixTimeStampToDateTime(accessTokenExpiryDate);
             var refreshTokenUtcExpire = Toolkit.DateTimeExtensions.ConvertToDateTime(long.Parse(loginResponse.RefreshTokenExpire));
 
-            var accessTokenExpire =  DateTime.UtcNow- accessTokenUtcExpiryDate;
+            var accessTokenExpire = DateTime.UtcNow - accessTokenUtcExpiryDate;
             var refreshTokenExpire = DateTime.UtcNow - refreshTokenUtcExpire;
 
             WebApiProvider.AccessTokenExpire = accessTokenUtcExpiryDate;
             WebApiProvider.RefreshTokenExpire = refreshTokenUtcExpire;
+            WebApiProvider.SetBearer(loginResponse.AccessToken, loginResponse.RefreshToken);
 
-            BindAccessTokenAction(loginResponse.AccessToken, loginResponse.RefreshToken);
+            // BindAccessTokenAction(loginResponse.AccessToken, loginResponse.RefreshToken);
 
             _logger.LogInformation($"Execute Login Method AccessToken :{loginResponse.AccessToken} AccessTokenExpire :{accessTokenExpire} RefreshToken :{loginResponse.RefreshToken} From {_webApiAddressSettings.LoginUrl}");
         }
         else
         {
+            //WebApiProvider.ClearHeader();
+
             _logger.LogInformation($"Execute Login Method Failure:{loginResponse.ToString()} From {_webApiAddressSettings.LoginUrl}");
         }
 
@@ -111,13 +114,14 @@ public class LoginHandler
 
         if (loginOutResponse.Succeeded)
         {
-            BindAccessTokenAction(null, null);
+            //BindAccessTokenAction(null, null);
+            WebApiProvider.ClearHeader();
 
             _logger.LogInformation($"Execute LoginOut Method Succeeded From {_webApiAddressSettings.LoginUrl}");
         }
         else
         {
-            BindAccessTokenAction(null, null);
+            WebApiProvider.ClearHeader();
 
             _logger.LogInformation($"Execute Login Method Failure:{loginOutResponse.ToString()} From {_webApiAddressSettings.LoginUrl}");
         }
@@ -130,7 +134,7 @@ public class LoginHandler
     public async Task<RefreshTokenResponse> RefreshTokenAsync(string accessToken, string refreshToken)
     {
         var refreshTokenResponse = await WebApiProvider.
-                 PostAsync<RefreshTokenResponse,RefreshTokenRequest>(_webApiAddressSettings.RefreshTokenUrl, new RefreshTokenRequest( accessToken,  refreshToken));
+                 PostAsync<RefreshTokenResponse, RefreshTokenRequest>(_webApiAddressSettings.RefreshTokenUrl, new RefreshTokenRequest(accessToken, refreshToken));
 
         if (refreshTokenResponse.Succeeded && !string.IsNullOrEmpty(refreshTokenResponse.AccessToken))
         {
@@ -142,15 +146,14 @@ public class LoginHandler
 
             WebApiProvider.AccessTokenExpire = accessTokenUtcExpiryDate;
             WebApiProvider.RefreshTokenExpire = refreshTokenUtcExpire;
+            WebApiProvider.SetBearer(refreshTokenResponse.AccessToken, refreshTokenResponse.RefreshToken);
 
-            BindAccessTokenAction(refreshTokenResponse.AccessToken, refreshTokenResponse.RefreshToken);
+            //  BindAccessTokenAction(refreshTokenResponse.AccessToken, refreshTokenResponse.RefreshToken);
 
             _logger.LogInformation($"Execute RefreshToken Method AccessToken :{refreshTokenResponse.AccessToken} RefreshToken :{refreshTokenResponse.RefreshToken} From {_webApiAddressSettings.RefreshTokenUrl}");
         }
         else
         {
-            //BindAccessTokenAction(null, null);
-
             _logger.LogInformation($"Execute RefreshToken Method Errors : {refreshTokenResponse.ToString()} From {_webApiAddressSettings.RefreshTokenUrl}");
         }
 

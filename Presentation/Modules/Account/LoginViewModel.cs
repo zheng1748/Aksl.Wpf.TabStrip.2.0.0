@@ -130,12 +130,14 @@ namespace Aksl.Modules.Account.ViewModels
             {
                 StatusMessage = "Logining.......";
 
+              var loginHandler= ServiceExtensions.GetLoginHandler();
+
                 if (ServiceExtensions.GetWebApiProvider().IsAccessTokenExpired)
                 {
-                    ServiceExtensions.GetLoginHandler().BindAccessTokenAction(null, null);
+                    ServiceExtensions.GetWebApiProvider().ClearHeader();
                 }
 
-                var loginResponse = await ServiceExtensions.GetLoginHandler().ExecuteLoginAction(UserName, Password);
+                var loginResponse = await loginHandler.ExecuteLoginAction(UserName, Password);
                 if (loginResponse.Succeeded)
                 {
                     //var loginResponse2 = await ServiceExtensions.GetLoginHandler().ExecuteLoginAction(UserName, Password);

@@ -15,7 +15,7 @@
 
     <Grid Margin="2,2,2,2">
         <Border Margin="0"
-                Background="WhiteSmoke"
+                Background="White"
                 BorderThickness="1,1,1,1"
                 CornerRadius="2">
             <Border.BorderBrush>
@@ -35,60 +35,237 @@
             </Border.BorderBrush>
             <Grid Visibility="{Binding Path=IsLoading,Converter={StaticResource booleanNegationToVisibilityConverter}}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="100" />
-                    <RowDefinition Height="80" />
-                    <RowDefinition Height="60" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="60" />
-                    <RowDefinition Height="100" />
-                    <RowDefinition Height="120" />
-                    <RowDefinition Height="120" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0"
                        Content="Refresh Token"
-                       FontSize="30"
+                       FontSize="42"
                        FontWeight="Bold"
                        VerticalContentAlignment="Center"
                        HorizontalContentAlignment="Center"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
-                       Margin="0,0,0,10"></Label>
+                       Margin="0,10,0,10"></Label>
 
                 <Grid Grid.Row="2"
-                      Margin="20,0,10,0">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="AccessToken:"
-                                   FontSize="16"    
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Left"
-                                   Margin="0,0,10,0" />
-                        <TextBox Text="{Binding Path=AccessToken,Mode=OneWay}" IsReadOnly="True"
-                                 FontSize="13"
-                                VerticalContentAlignment="Top"
-                                                          HorizontalAlignment="Left"
-                                 TextWrapping="Wrap"
-                                   Margin="10,0,10,0" />
-                    </StackPanel>
+                      Margin="10,0,20,0">
+                    <GroupBox Height="280"
+                              FontSize="22"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              Padding="20,0,20,0"
+                              Margin="0,0,0,0">
+                        <GroupBox.Header>
+                            <Label Content="AccessToken"
+                                   FontSize="26"
+                                   FontWeight="DemiBold"
+                                   Margin="0,0,0,0" />
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Text="AccessToken:"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="10,0,10,0" />
+                            <TextBox Grid.Row="0"
+                                     Grid.Column="1"
+                                     Text="{Binding Path=AccessToken,Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     FontSize="15"
+                                     VerticalContentAlignment="Top"
+                                     HorizontalAlignment="Left"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Visible"
+                                     MinHeight="40"
+                                     MaxHeight="120"
+                                     Margin="10,0,0,0" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Text="AccessTokenExpire:"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="10,0,10,0" />
+                            <TextBox Grid.Row="2"
+                                     Grid.Column="1"
+                                     Text="{Binding Path=AccessTokenExpireString,Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     Width="250"
+                                     FontSize="15"
+                                     VerticalContentAlignment="Center"
+                                     HorizontalAlignment="Left"
+                                     TextWrapping="Wrap"
+                                     Margin="10,0,10,0" />
+
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="0"
+                                       Text="剩余时间:"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="10,0,10,0" />
+                            <TextBox Grid.Row="4"
+                                     Grid.Column="1"
+                                     Text="{Binding Path=AccessTokenExpireLeft,Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     Width="250"
+                                     FontSize="15"
+                                     VerticalContentAlignment="Center"
+                                     HorizontalAlignment="Left"
+                                     TextWrapping="Wrap"
+                                     Margin="10,0,10,0" />
+
+                            <TextBlock Grid.Row="6"
+                                       Grid.Column="0"
+                                       Text="IsAccessTokenExpired:"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="10,0,10,0" />
+                            <CheckBox Grid.Row="6"
+                                     Grid.Column="1"
+                                     IsChecked="{Binding Path=IsAccessTokenExpired,Mode=OneWay}"
+                                     Width="50" 
+                                     VerticalContentAlignment="Center" VerticalAlignment="Center"
+                                     HorizontalAlignment="Left"
+                                     Margin="10,0,10,0" />
+                        </Grid>
+                    </GroupBox>
                 </Grid>
-                
+
                 <Grid Grid.Row="4"
-                      Margin="10,0,50,0">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="RefreshToken:"
-                                   FontSize="16"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Center"
-                                   Margin="0,0,10,0" />
-                        <TextBox Text="{Binding Path=RefreshToken,Mode=OneWay}"
-                                 IsReadOnly="True"
-                                 FontSize="13"
-                                 VerticalContentAlignment="Top"
-                                 HorizontalAlignment="Left"
-                                 TextWrapping="Wrap"
-                                 Margin="10,0,10,0" />
-                    </StackPanel>
+                      Margin="10,0,20,0">
+                    <GroupBox Height="230"
+                              FontSize="22"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              Padding="20,0,20,0"
+                              Margin="0,0,0,0">
+                        <GroupBox.Header>
+                            <Label Content="RefreshToken"
+                                   FontSize="26"
+                                   FontWeight="DemiBold"
+                                   Margin="0,0,0,0" />
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Text="RefreshToken:"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="0,0,10,0" />
+                            <TextBox Grid.Row="0"
+                                     Grid.Column="1"
+                                     Text="{Binding Path=RefreshToken,Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     FontSize="15"
+                                     VerticalContentAlignment="Top"
+                                     HorizontalAlignment="Left"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Visible"
+                                     MinHeight="40"
+                                     MaxHeight="120"
+                                     Margin="10,0,10,0" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Text="RefreshTokenExpire:"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="0,0,10,0" />
+                            <TextBox Grid.Row="2"
+                                     Grid.Column="1"
+                                     Text="{Binding Path=RefreshTokenExpireString,Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     Width="250"
+                                     FontSize="15"
+                                     VerticalContentAlignment="Center"
+                                     HorizontalAlignment="Left"
+                                     TextWrapping="Wrap"
+                                     Margin="10,0,10,0" />
+
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="0"
+                                       Text="剩余时间:"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="0,0,10,0" />
+                            <TextBox Grid.Row="4"
+                                     Grid.Column="1"
+                                     Text="{Binding Path=RefreshTokenExpireLeft ,Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     Width="250"
+                                     FontSize="15"
+                                     VerticalContentAlignment="Center"
+                                     HorizontalAlignment="Left"
+                                     TextWrapping="Wrap"
+                                     Margin="10,0,10,0" />
+
+                            <TextBlock Grid.Row="6"
+                                       Grid.Column="0"
+                                       Text="IsRefreshTokenExpire:"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       Margin="0,0,10,0" />
+                            <CheckBox Grid.Row="6"
+                                      Grid.Column="1"
+                                      IsChecked="{Binding Path=IsRefreshTokenExpire,Mode=OneWay}"
+                                      Width="50"
+                                      VerticalContentAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left"
+                                      Margin="10,0,10,0" />
+                        </Grid>
+                    </GroupBox>
                 </Grid>
 
                 <Button Grid.Row="6"
@@ -105,12 +282,12 @@
 
                 <TextBlock Grid.Row="8"
                            Text="{Binding Path=ResponseMessage,Mode=OneWay}"
-                          FontSize="22"
+                           FontSize="22"
                            TextDecorations="Underline"
                            TextWrapping="Wrap"
-                           HorizontalAlignment="Left" 
+                           HorizontalAlignment="Left"
                            VerticalAlignment="Center"
-                           Margin="30,0,30,0">
+                           Margin="30,0,30,20">
                 </TextBlock>
             </Grid>
         </Border>

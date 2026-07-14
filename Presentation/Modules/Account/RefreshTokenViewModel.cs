@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Unity;
+using System.Windows.Threading;
 
 namespace Aksl.Modules.Account.ViewModels
 {
@@ -32,6 +33,9 @@ namespace Aksl.Modules.Account.ViewModels
         private readonly IDialogViewService _dialogViewService;
         private readonly WebApiProvider _webApiProvider;
         private readonly Dictionary<string, string> _errors;
+
+        // timer for updating AccessTokenExpireLeft
+        private readonly DispatcherTimer _expireTimer;
         #endregion
 
         #region Constructors
@@ -46,11 +50,29 @@ namespace Aksl.Modules.Account.ViewModels
 
             _webApiProvider = ServiceExtensions.GetWebApiProvider();
             AccessToken= _webApiProvider.AccessToken;
-            RefreshToken= _webApiProvider.RefreshToken;
+            AccessTokenExpire= _webApiProvider.AccessTokenExpire ?? _webApiProvider.AccessTokenExpire.Value;
+            AccessTokenExpireString = $"{_webApiProvider.AccessTokenExpire??_webApiProvider.AccessTokenExpire.Value.ToLocalTime():yyyy-MM-dd HH:mm:ss}";
+
+            RefreshToken = _webApiProvider.RefreshToken;
+            RefreshTokenExpire = _webApiProvider.RefreshTokenExpire ?? _webApiProvider.RefreshTokenExpire.Value;
+            RefreshTokenExpireString = $"{_webApiProvider.RefreshTokenExpire ?? _webApiProvider.RefreshTokenExpire.Value.ToLocalTime():yyyy-MM-dd HH:mm:ss}";
 
             CreateRefreshTokenCommand();
 
             RegisterPropertyChanged();
+
+            // create and start dispatcher timer to update AccessTokenExpireLeft every second
+            _expireTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _expireTimer.Tick += (s, e) => 
+            { 
+                UpdateAccessTokenExpire(); 
+                UpdateRefreshTokenExpire();
+            };
+            UpdateAccessTokenExpire();
+            _expireTimer.Start();
 
             StatusMessage = "";
         }
@@ -64,8 +86,51 @@ namespace Aksl.Modules.Account.ViewModels
             set => SetProperty<string>(ref field, value);
         }
 
+        public DateTime AccessTokenExpire { get; set; }
+        public bool IsAccessTokenExpired
+        {
+            get
+            {
+                return DateTime.UtcNow > AccessTokenExpire;
+            }
+        }
+
+        // AccessTokenExpireLeft shows the live countdown as a formatted string
+        private string _accessTokenExpireLeft;
+        public string AccessTokenExpireLeft
+        {
+            get => _accessTokenExpireLeft;
+            set => SetProperty(ref _accessTokenExpireLeft, value);
+        }
+
+        public string AccessTokenExpireString 
+         {
+            get => field;
+            set => SetProperty<string>(ref field, value);
+        }
+
         [Required(ErrorMessage = "RefreshToken不能为空")]
         public string RefreshToken
+        {
+            get => field;
+            set => SetProperty<string>(ref field, value);
+        }
+
+        public DateTime RefreshTokenExpire { get; set; }
+        public bool IsRefreshTokenExpire
+        {
+            get
+            {
+                return DateTime.UtcNow > RefreshTokenExpire;
+            }
+        }
+        public string RefreshTokenExpireLeft
+        {
+            get => field;
+            set => SetProperty(ref field, value);
+        }
+
+        public string RefreshTokenExpireString
         {
             get => field;
             set => SetProperty<string>(ref field, value);
@@ -108,6 +173,71 @@ namespace Aksl.Modules.Account.ViewModels
         }
         #endregion
 
+        #region UpdateAccessTokenExpire Method
+        private void UpdateAccessTokenExpire()
+        {
+            try
+            {
+                var remainingAccessToken = AccessTokenExpire - DateTime.UtcNow;
+
+                if (remainingAccessToken.TotalSeconds <= 0)
+                {
+                    //AccessTokenExpireLeft = "00:00:00";
+                    //AccessTokenExpireLeft = remainingAccessToken.ToString("hh:mm:ss");
+                    AccessTokenExpireLeft = remainingAccessToken.ToString();
+                }
+                else
+                {
+                    if (remainingAccessToken.Days > 0)
+                    {
+                        AccessTokenExpireLeft = $"{remainingAccessToken.Days}d {remainingAccessToken:hh:mm:ss}";
+                    }
+                    else
+                    {
+                        AccessTokenExpireLeft = remainingAccessToken.ToString();
+                    }
+                }
+
+                RaisePropertyChanged(nameof(IsAccessTokenExpired));
+            }
+            catch
+            {
+                AccessTokenExpireLeft = string.Empty;
+            }
+        }
+
+        private void UpdateRefreshTokenExpire()
+        {
+            try
+            {
+                var remainingRefreshToken = RefreshTokenExpire - DateTime.UtcNow;
+
+                if (remainingRefreshToken.TotalSeconds <= 0)
+                {
+                    //RefreshTokenExpireLeft = remainingRefreshToken.ToString("hh:mm:ss");
+                    RefreshTokenExpireLeft = remainingRefreshToken.ToString();
+                }
+                else
+                {
+                    if (remainingRefreshToken.Days > 0)
+                    {
+                        RefreshTokenExpireLeft = $"{remainingRefreshToken.Days}d {remainingRefreshToken:hh:mm:ss}";
+                    }
+                    else
+                    {
+                        RefreshTokenExpireLeft = remainingRefreshToken.ToString();
+                    }
+                }
+
+                RaisePropertyChanged(nameof(IsRefreshTokenExpire));
+            }
+            catch
+            {
+                RefreshTokenExpireLeft = string.Empty;
+            }
+        }
+        #endregion
+
         #region RefreshTokenCommand  Command
         public ICommand RefreshTokenCommand { get; private set; }
 
@@ -128,28 +258,19 @@ namespace Aksl.Modules.Account.ViewModels
         {
             try
             {
-                if (!_webApiProvider.IsAccessTokenExpired && !_webApiProvider.IsRefreshTokenExpire)
-                {
-                    ResponseMessage = $"Token has not yet expired.";
+                //if (!_webApiProvider.IsAccessTokenExpired && !_webApiProvider.IsRefreshTokenExpire)
+                //{
+                //    ResponseMessage = $"AccessToken has not yet expired.";
 
-                    return;
-                }
+                //    return;
+                //}
 
-                if (_webApiProvider.IsAccessTokenExpired && _webApiProvider.IsRefreshTokenExpire)
-                {
-                    //AccessToken = null;
-                    //RefreshToken = null;
+                //if (_webApiProvider.IsAccessTokenExpired && _webApiProvider.IsRefreshTokenExpire)
+                //{
+                //    ResponseMessage = $"Refresh Token has expired, user needs to re-login.";
 
-                    //var dialogResult = await _dialogViewService.ConfirmWhenAsync(message: $"accessToken {this.AccessToken} is expired,yes will re-login", title: "Refresh Token");
-                    //if (dialogResult)
-                    //{
-                    //    ShellActiveContentExtensions.RetsetActiveContentToLoginView();
-                    //}
-
-                    ResponseMessage = $"Refresh Token has expired, user needs to re-login.";
-
-                    return;
-                }
+                //    return;
+                //}
 
                 IsLoading = true;
                 StatusMessage = "Refreshing Token.......";
@@ -161,8 +282,13 @@ namespace Aksl.Modules.Account.ViewModels
                 {
                     ResponseMessage = "Refresh Token Succeeded";
 
-                    AccessToken = refreshTokenResponse.AccessToken;
-                    RefreshToken = refreshTokenResponse.RefreshToken;
+                    AccessToken = _webApiProvider.AccessToken;
+                    AccessTokenExpire = _webApiProvider.AccessTokenExpire.Value;
+                    AccessTokenExpireString = $"{_webApiProvider.AccessTokenExpire.Value.ToLocalTime():yyyy-MM-dd HH:mm:ss}";
+
+                    RefreshToken = _webApiProvider.RefreshToken;
+                    RefreshTokenExpire = _webApiProvider.RefreshTokenExpire.Value;
+                    RefreshTokenExpireString = $"{_webApiProvider.RefreshTokenExpire.Value.ToLocalTime():yyyy-MM-dd HH:mm:ss}";
 
                     await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
                 }
@@ -178,11 +304,13 @@ namespace Aksl.Modules.Account.ViewModels
                     ResponseMessage = $"{refreshTokenResponse.ToString()}";
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is System.Text.Json.JsonException)
             {
-               // var webApiProvider = ServiceExtensions.GetWebApiProvider();
+                _webApiProvider.ClearHeader();
 
-                ServiceExtensions.GetLoginHandler().BindAccessTokenAction(null, null);
+                // var webApiProvider = ServiceExtensions.GetWebApiProvider();
+
+                //ServiceExtensions.GetLoginHandler().BindAccessTokenAction(null, null);
 
                 ResponseMessage = $"{ex.Message}";
 
