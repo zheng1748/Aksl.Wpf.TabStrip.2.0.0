@@ -2,9 +2,9 @@
 using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
-using Aksl.Tabs;
-using Aksl.Tabs.ViewModels;
-using Aksl.Tabs.Views;
+using Aksl.TabStrip;
+using Aksl.TabStrip.ViewModels;
+using Aksl.TabStrip.Views;
 using Aksl.Toolkit.Controls;
 using Prism;
 using Prism.Events;
@@ -323,7 +323,7 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
                             }
                             else if (lmi.HasViewName())
                             {
-                                Aksl.Tabs.TabInformation subTabInformation = new()
+                                Aksl.TabStrip.TabInformation subTabInformation = new()
                                 {
                                     Name = lmi.Name,
                                     Title = lmi.Title,

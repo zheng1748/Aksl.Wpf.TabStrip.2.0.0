@@ -11,7 +11,7 @@ using System.Linq;
 using System.Windows.Controls;
 using Unity;
 
-namespace Aksl.Tabs.ViewModels
+namespace Aksl.TabStrip.ViewModels
 {
     public class TabViewModel : BindableBase
     {

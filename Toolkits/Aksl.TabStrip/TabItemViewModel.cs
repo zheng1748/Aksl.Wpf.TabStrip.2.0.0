@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using Unity;
 
-namespace Aksl.Tabs.ViewModels
+namespace Aksl.TabStrip.ViewModels
 {
     public class TabItemViewModel : BindableBase
     {

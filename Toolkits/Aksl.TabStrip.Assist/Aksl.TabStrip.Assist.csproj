@@ -5,11 +5,11 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<RootNamespace>Aksl.TabStrips.Assist</RootNamespace>
-		<Description>Use Wpf TabStrips Assist.</Description>
+		<RootNamespace>Aksl.TabStrip</RootNamespace>
+		<Description>Use Wpf TabStrip Assist.</Description>
 		<Authors>zheng ming 13529806</Authors>
 		<Company>Aksl</Company>
-		<Product>Wpf TabStrips Assist</Product>
+		<Product>Wpf TabStrip Assist</Product>
 	</PropertyGroup>
 
 	<ItemGroup>

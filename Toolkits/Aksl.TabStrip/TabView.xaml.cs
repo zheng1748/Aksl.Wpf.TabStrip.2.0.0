@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Aksl.Tabs.Views
+namespace Aksl.TabStrip.Views
 {
     public partial class TabView : UserControl
     {

@@ -52,8 +52,8 @@
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml" Version="4.7.0" />-->
     <ProjectReference Include="..\..\Toolkits\Aksl.ActiveContents\Aksl.ActiveContents.csproj" />
     <ProjectReference Include="..\..\Toolkits\Aksl.Dialogs\Aksl.Dialogs.csproj" />
-    <ProjectReference Include="..\..\Toolkits\Aksl.TabStrips.Assist\Aksl.TabStrips.Assist.csproj" />
-    <ProjectReference Include="..\..\Toolkits\Aksl.TabStrips\Aksl.TabStrips.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Aksl.TabStrip.Assist\Aksl.TabStrip.Assist.csproj" />
+    <ProjectReference Include="..\..\Toolkits\Aksl.TabStrip\Aksl.TabStrip.csproj" />
     <ProjectReference Include="..\..\Toolkits\Aksl.Toolkit\Aksl.Toolkit.csproj" />
     <ProjectReference Include="..\..\Toolkits\Prism Library\Prism.Core\Prism.Core.csproj" />
     <ProjectReference Include="..\..\Toolkits\Prism Library\Prism.Unity.Wpf\Prism.Unity.Wpf.csproj" />

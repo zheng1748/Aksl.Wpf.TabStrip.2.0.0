@@ -1,5 +1,6 @@
 ﻿using Aksl.Infrastructure;
-using Aksl.Tabs.ViewModels;
+using Aksl.TabStrip;
+using Aksl.TabStrip.ViewModels;
 using Aksl.Toolkit.Controls;
 using Prism;
 using Prism.Commands;

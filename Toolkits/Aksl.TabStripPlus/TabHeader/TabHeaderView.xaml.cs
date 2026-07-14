@@ -11,11 +11,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Aksl.Tabs.Views
+namespace Aksl.TabStripPlus.Views
 {
-    public partial class TabItemView : UserControl
+    public partial class TabHeaderView : UserControl
     {
-        public TabItemView()
+        public TabHeaderView()
         {
             InitializeComponent();
         }

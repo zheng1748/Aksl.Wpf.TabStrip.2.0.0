@@ -1,5 +1,5 @@
 ﻿using Aksl.Infrastructure;
-using Aksl.Tabs;
+using Aksl.TabStrip;
 using Prism.Events;
 using Prism.Mvvm;
 using System;

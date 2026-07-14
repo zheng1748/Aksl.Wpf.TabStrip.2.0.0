@@ -3,7 +3,7 @@ using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
 using Aksl.Mvvm;
-using Aksl.Tabs.ViewModels;
+using Aksl.TabStrip.ViewModels;
 using Prism;
 using Prism.Events;
 using Prism.Ioc;

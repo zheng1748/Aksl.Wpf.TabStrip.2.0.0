@@ -1,12 +1,12 @@
 ﻿
 using Prism.Events;
 
-namespace Aksl.Tabs
+namespace Aksl.TabStripPlus
 {
-    public class OnSelectedTabItemEmptyEvent : PubSubEvent<OnSelectedTabItemEmptyEvent>
+    public class OnSelectedTabHeaderItemEmptyEvent : PubSubEvent<OnSelectedTabHeaderItemEmptyEvent>
     {
         #region Constructors
-        public OnSelectedTabItemEmptyEvent()
+        public OnSelectedTabHeaderItemEmptyEvent()
         {
             IsEmpty=true;
         }

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace Aksl.Tabs
+namespace Aksl.TabStripPlus
 {
-    public class TabInformation
+    public class TabPlusInformation
     {
         #region Constructors
-        public TabInformation()
+        public TabPlusInformation()
         {
         }
         #endregion

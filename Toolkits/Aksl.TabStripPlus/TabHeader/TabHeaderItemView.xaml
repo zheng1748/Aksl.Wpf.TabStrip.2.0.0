@@ -1,11 +1,19 @@
-﻿<UserControl x:Class="Aksl.Tabs.Views.TabItemHeaderView"
+﻿<UserControl x:Class="Aksl.TabStripPlus.Views.TabHeaderItemView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ei="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
-             d:DesignHeight="200"
-             d:DesignWidth="500">
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Cursor="">
+    <!--<ei:Interaction.Triggers>
+        <ei:EventTrigger EventName="MouseLeftButtonDown">
+            <ei:CallMethodAction TargetObject="{Binding}"
+                                 MethodName="ExecuteMouseLeftButtonDown" />
+        </ei:EventTrigger>
+    </ei:Interaction.Triggers>-->
     <UserControl.Resources>
 
         <ControlTemplate x:Key="ButtonTemplateKey"
@@ -16,11 +24,11 @@
                     BorderBrush="Transparent"
                     Width="Auto"
                     Visibility="Visible">
-                <ContentPresenter  x:Name="contentPresenter"
-                                   Margin="3"
-                                   Content="{TemplateBinding Content}"
-                                   Width="Auto"
-                                   Height="Auto" />
+                <ContentPresenter x:Name="contentPresenter"
+                                  Margin="3"
+                                  Content="{TemplateBinding Content}"
+                                  Width="Auto"
+                                  Height="Auto" />
             </Border>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver"
@@ -29,9 +37,12 @@
                             Property="Background"
                             Value="#FF4F0000" />
                     <Setter TargetName="contentPresenter"
-                            Property="BitmapEffect">
+                            Property="Effect">
                         <Setter.Value>
-                            <OuterGlowBitmapEffect GlowColor="#FFFFFFFF" />
+                            <DropShadowEffect Color="#FFFFFFFF"
+                                              BlurRadius="8"
+                                              ShadowDepth="0"
+                                              Opacity="1" />
                         </Setter.Value>
                     </Setter>
                 </Trigger>
@@ -44,20 +55,20 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
-        <Style x:Key="CloseTabStButtonyle"
+        <Style x:Key="CloseTabButtonyle"
                TargetType="{x:Type Button}">
             <Setter Property="Command"
                     Value="{Binding Path=ExecuteCloseTabCommand}" />
             <Setter Property="Visibility"
                     Value="{Binding Path=CloseTabButtonVisibility}" />
             <Setter Property="Margin"
-                    Value="2,0,0,0" />
+                    Value="0,0,10,2" />
             <Setter Property="Padding"
                     Value="0" />
             <Setter Property="Width"
-                    Value="16" />
+                    Value="20" />
             <Setter Property="Height"
-                    Value="16" />
+                    Value="20" />
             <Setter Property="Foreground"
                     Value="#FFFFFFFF" />
             <Setter Property="Content">
@@ -84,14 +95,45 @@
         </Style>
     </UserControl.Resources>
 
-    <DockPanel>
+    <!--<DockPanel Height="45"
+               Width="150" Background="Red" HorizontalAlignment="Left">
         <Button DockPanel.Dock="Right"
-                Style="{StaticResource CloseTabStButtonyle}">
+                Style="{StaticResource CloseTabButtonyle}">
         </Button>
         <TextBlock TextWrapping="Wrap"
                    VerticalAlignment="Center"
                    Margin="0,0,0,0">
-         <Run Text="{Binding Path=Title,Mode=OneWay}" />
+            <Run Text="{Binding Path=Title,Mode=OneWay}" />
         </TextBlock >
-    </DockPanel>
+    </DockPanel>-->
+
+    <!--<Border Height="49"
+            Width="150"
+          
+            Cursor="Hand"
+            Background="Transparent"
+        
+            Margin="1,1,1,1">-->
+    <Grid Height="38"
+          Width="150">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2" />
+            <ColumnDefinition Width="Auto" />
+            <!--<ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />-->
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Center"
+                   Margin="2,0,0,2">
+                <Run Text="{Binding Path=Title,Mode=OneWay}"
+                     FontSize="16" />
+        </TextBlock >
+        <Button Grid.Column="2"
+                VerticalAlignment="Center"
+                Style="{StaticResource CloseTabButtonyle}">
+        </Button>
+    </Grid>
+    <!--</Border>-->
 </UserControl>

@@ -1,6 +1,6 @@
 ﻿using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
-using Aksl.Tabs;
+using Aksl.TabStrip;
 using Prism;
 using Prism.Events;
 using Prism.Ioc;
@@ -31,7 +31,7 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
         {
             _eventAggregator = PrismUnityExtensions.GetEventAggregator();
             _dialogViewService = PrismUnityExtensions.GetDialogViewService();
-            _menuService = PrismUnityExtensions.GetMenuService();
+            _menuService = PrismUnityExtensions.GetMenuService(); 
 
             AllLeafHamburgerMenuSideBarItems = new();
 

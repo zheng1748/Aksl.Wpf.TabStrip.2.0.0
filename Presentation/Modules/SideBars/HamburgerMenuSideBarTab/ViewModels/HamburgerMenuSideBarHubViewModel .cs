@@ -4,7 +4,7 @@ using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
 using Aksl.Modules.HamburgerMenuSideBarTab.Views;
-using Aksl.Tabs.ViewModels;
+using Aksl.TabStrip.ViewModels;
 using Prism;
 using Prism.Commands;
 using Prism.Events;

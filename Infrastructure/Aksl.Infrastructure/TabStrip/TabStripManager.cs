@@ -1,7 +1,7 @@
 ﻿using Aksl.ActiveContents;
-using Aksl.Tabs;
-using Aksl.Tabs.ViewModels;
-using Aksl.Tabs.Views;
+using Aksl.TabStrip;
+using Aksl.TabStrip.ViewModels;
+using Aksl.TabStrip.Views;
 using Prism;
 using Prism.Common;
 using Prism.Ioc;
@@ -237,7 +237,7 @@ public class TabStripManager
                             {
                                 var viewTypeName = lmi.GetViewTypeName();
 
-                                Aksl.Tabs.TabInformation subTabInformation = new()
+                                Aksl.TabStrip.TabInformation subTabInformation = new()
                                 {
                                     Name = lmi.Name,
                                     Title = lmi.Title,

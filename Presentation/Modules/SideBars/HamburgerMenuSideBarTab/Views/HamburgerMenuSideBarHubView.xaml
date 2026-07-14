@@ -9,7 +9,7 @@
              xmlns:sv="clr-namespace:Aksl.Mvvm;assembly=Aksl.Toolkit"
              xmlns:materialDesign="clr-namespace:Aksl.Toolkit.Controls;assembly=Aksl.Toolkit.Controls"
              xmlns:acview="clr-namespace:Aksl.ActiveContents.Views;assembly=Aksl.ActiveContents"
-             xmlns:tabViews="clr-namespace:Aksl.Tabs.Views;assembly=Aksl.TabStrips"
+             xmlns:tabStripViews="clr-namespace:Aksl.TabStrip.Views;assembly=Aksl.TabStrip"
              xmlns:views="clr-namespace:Aksl.Modules.HamburgerMenuSideBarTab.Views"
              mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
@@ -561,7 +561,7 @@
                 <Grid x:Name="ContentRoot"
                       Grid.ColumnSpan="2">
                     <Border>
-                        <tabViews:TabView DataContext="{Binding Path=TabStripViewModel}" />
+                        <tabStripViews:TabView DataContext="{Binding Path=TabStripViewModel}" />
                     </Border>
                     <Rectangle x:Name="LightDismissLayer"
                                Fill="Transparent"
