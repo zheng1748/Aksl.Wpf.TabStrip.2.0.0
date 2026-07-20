@@ -28,8 +28,6 @@
 
         <Style x:Key="labelStyle"
                TargetType="{x:Type Label}">
-            <!--<Setter Property="Content"
-                  Value="{Binding Title}" />-->
             <Setter Property="FontSize"
                     Value="13.5" />
             <Setter Property="IsEnabled"
@@ -55,7 +53,7 @@
                 <DataTrigger Binding="{Binding IsTopLevelSelected,Mode=TwoWay}"
                              Value="True">
                     <Setter Property="FontSize"
-                            Value="16" />
+                            Value="14.5" />
                     <Setter Property="FontWeight"
                             Value="Bold" />
                 </DataTrigger>
@@ -90,10 +88,17 @@
     <StackPanel Orientation="Vertical">
         <Label Style="{StaticResource labelStyle}" />
         <Rectangle x:Name="IndicatorRectangle"
-                   Visibility="{Binding Path=IsSelected,Converter={StaticResource booleanToVisibilityConverter}}"
+                   Visibility="{Binding Path=IsTopLevelSelected,Converter={StaticResource booleanToVisibilityConverter}}"
                    Style="{StaticResource rectangleStyle}">
             <ei:Interaction.Triggers>
-                <ei:DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}"
+                <!--<ei:DataTrigger Binding="{Binding Path=IsSelected,Mode=OneWay}"
+                                Comparison="Equal"
+                                Value="True">
+                    <ei:ControlStoryboardAction ControlStoryboardOption="Play"
+                                                Storyboard="{StaticResource IndicatorStoryboard}">
+                    </ei:ControlStoryboardAction>
+                </ei:DataTrigger>-->
+                <ei:DataTrigger Binding="{Binding Path=IsTopLevelSelected,Mode=OneWay}"
                                 Comparison="Equal"
                                 Value="True">
                     <ei:ControlStoryboardAction ControlStoryboardOption="Play"

@@ -1,31 +1,17 @@
 ﻿using Aksl.ActiveContents.ViewModels;
-using Aksl.ActiveContents.Views;
 using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
-using Aksl.Modules.HamburgerMenuSideBarTab.Views;
 using Aksl.TabStrip.ViewModels;
-using Prism;
-using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Xml.Linq;
 using Unity;
 
 namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
@@ -37,7 +23,6 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IDialogViewService _dialogViewService;
         private readonly IMenuService _menuService;
-       // private string _workspaceViewEventName;
         #endregion
 
         #region Constructors
@@ -67,41 +52,29 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
 
         public HamburgerMenuSideBarViewModel TopHamburgerMenuSideBar { get; set; }
 
-        public ActiveContentItemViewModel SelectedLeftPaneActiveContentItem
-        {
-            get => field;
-            set => SetProperty(ref field, value);
-        }
+        //public ActiveContentItemViewModel SelectedLeftPaneActiveContentItem
+        //{
+        //    get => field;
+        //    set => SetProperty(ref field, value);
+        //}
 
-        public HamburgerMenuSideBarViewModel SelectedHamburgerMenuSideBar
-        {
-            get => field;
-            set => SetProperty(ref field, value);
-        }
+        //public HamburgerMenuSideBarViewModel SelectedHamburgerMenuSideBar
+        //{
+        //    get => field;
+        //    set => SetProperty(ref field, value);
+        //}
 
-        public HamburgerMenuSideBarItemViewModel SelectedHamburgerMenuSideBarItem
-        {
-            get;
-            set => SetProperty(ref field, value);
-        }
+        //public HamburgerMenuSideBarItemViewModel SelectedHamburgerMenuSideBarItem
+        //{
+        //    get;
+        //    set => SetProperty(ref field, value);
+        //}
 
         public bool IsLoading
         {
             get => field;
             set => SetProperty<bool>(ref field, value);
         } = false;
-
-        //public bool CanMove =>
-        //              LeftPaneActiveContentViewModel.CanMove;
-
-        //public Visibility MoveButtonVisibility
-        //{
-        //    get
-        //    {
-        //        field = Visibility.Collapsed;
-        //        return field;
-        //    }
-        //} = Visibility.Collapsed;
         #endregion
 
         #region HamburgerMenu Properties

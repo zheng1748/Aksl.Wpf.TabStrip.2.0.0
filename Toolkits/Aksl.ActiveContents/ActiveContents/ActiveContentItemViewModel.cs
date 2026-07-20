@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Input;
 
-using Prism;
-using Prism.Commands;
-using Prism.Events;
-using Prism.Ioc;
 using Prism.Mvvm;
-using Prism.Unity;
-using Unity;
 
 namespace Aksl.ActiveContents.ViewModels            
 {
@@ -31,83 +24,64 @@ namespace Aksl.ActiveContents.ViewModels
         public string Title => _contentInformation.Title;
         public string ViewName => _contentInformation.ViewName;
 
-        private Type _viewElementType = default;
         public Type ViewElementType
         {
             get
             {
-                if (_viewElementType is null)
+                if (field is null)
                 {
                     if (!string.IsNullOrEmpty(_contentInformation.ViewName))
                     {
                         string viewTypeAssemblyQualifiedName = _contentInformation.ViewName;
-                        _viewElementType = Type.GetType(viewTypeAssemblyQualifiedName);
+                        field = Type.GetType(viewTypeAssemblyQualifiedName);
                     }
                 }
 
-                return _viewElementType;
+                return field;
             }
         }
 
-        private DependencyObject _viewElement = default;
         public DependencyObject ViewElement
         {
             get
             {
-                if (_viewElement is null)
+                if (field is null)
                 {
                     if (ViewElementType is not null)
                     {
-                        _viewElement = Activator.CreateInstance(ViewElementType) as DependencyObject;
+                        field = Activator.CreateInstance(ViewElementType) as DependencyObject;
                     }
                 }
 
-                return _viewElement;
+                return field;
             }
             set
             {
-                SetProperty<DependencyObject>(ref _viewElement, value);
+                SetProperty<DependencyObject>(ref field, value);
             }
         }
 
-        private bool _isSelected = false;
         public bool IsSelected
         {
-            get => _isSelected;
+            get => field;
             set
             {
-                if (SetProperty<bool>(ref _isSelected, value))
+                if (SetProperty<bool>(ref field, value))
                 {
-                    //if (ViewElement is not null)
-                    //{
-                    //    (ViewElement as UIElement).Visibility = _isSelected ? Visibility.Visible : Visibility.Collapsed;
-                    //}
-                    //if (_isSelected)
-                    //{
-                        if (ViewElement is not null)
-                        {
-                            (ViewElement as UIElement).Visibility = _isSelected ? Visibility.Visible : Visibility.Collapsed;
-                        }
-                    //}
-                    //else
-                    //{
-                    //    if (ViewElement is not null)
-                    //    {
-                    //        ViewElement = null;
-                    //    }
-                    //}
+                    if (ViewElement is not null)
+                    {
+                        (ViewElement as UIElement).Visibility = field ? Visibility.Visible : Visibility.Collapsed;
+                    }
                 }
             }
         }
 
-
-        private Visibility _viewElementVisibility = Visibility.Visible;
         public Visibility ViewElementVisibility
         {
             get => (ViewElement as UIElement).Visibility;
             set
             {
-                if (SetProperty<Visibility>(ref _viewElementVisibility, value))
+                if (SetProperty<Visibility>(ref field, value))
                 {
                     if (ViewElement is not null)
                     {

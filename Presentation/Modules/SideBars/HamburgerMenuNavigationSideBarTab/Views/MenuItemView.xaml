@@ -46,7 +46,7 @@
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=IsPaneOpen}"
+                <!--<DataTrigger Binding="{Binding Path=IsPaneOpen}"
                              Value="True">
                     <Setter Property="ToolTip"
                             Value="{x:Null}" />
@@ -55,7 +55,7 @@
                              Value="False">
                     <Setter Property="ToolTip"
                             Value="{Binding Title}" />
-                </DataTrigger>
+                </DataTrigger>-->
             </Style.Triggers>
         </Style>
     </UserControl.Resources>

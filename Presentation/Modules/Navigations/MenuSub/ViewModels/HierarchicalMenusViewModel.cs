@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Aksl.Infrastructure;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
-
-using Prism.Events;
-using Prism.Mvvm;
-
-using Aksl.Infrastructure;
+using System.Windows.Controls;
 
 namespace Aksl.Modules.MenuSub.ViewModels
 {
@@ -17,43 +18,44 @@ namespace Aksl.Modules.MenuSub.ViewModels
         #region Members
         private readonly IEventAggregator _eventAggregator;
         private readonly IMenuService _menuService;
-        private MenuItem _rootMenuItem;
-        private MenuItem _parentMenuItem;
-        private HierarchicalMenuItemViewModel _selectedMenuItem;
+        private Aksl.Infrastructure.MenuItem _rootMenuItem; 
+        private Aksl.Infrastructure.MenuItem _parentMenuItem;
+        //private HierarchicalMenuItemViewModel _selectedMenuItem;
         #endregion
 
         #region Constructors
-        public HierarchicalMenusViewModel(IEventAggregator eventAggregator,IMenuService menuService, MenuItem rootMenuItem)
+        public HierarchicalMenusViewModel()
+        {
+            _eventAggregator = PrismUnityExtensions.GetEventAggregator();
+
+            TopHierarchicalMenuItems = new();
+
+            RegisterOnTopMenuSelectedEvent();
+        }
+
+        public HierarchicalMenusViewModel(IEventAggregator eventAggregator,IMenuService menuService, Aksl.Infrastructure.MenuItem rootMenuItem)
         {
             _eventAggregator = eventAggregator;
             _menuService = menuService;
 
             _rootMenuItem = rootMenuItem;
 
-            //TopHierarchicalMenuItems = new();
-            //TopLeafHierarchicalMenuItems = new();
-            //AllHierarchicalSubMenuItems = new();
-            //AllLeafHierarchicalSubMenuItems = new();
-
-            AllHierarchicalMenuItems = new();
+            TopHierarchicalMenuItems = new();
 
             RegisterOnTopMenuSelectedEvent();
         }
         #endregion
 
         #region Properties
-        //public ObservableCollection<HierarchicalMenuItemViewModel> TopHierarchicalMenuItems { get; }
-        //public ObservableCollection<HierarchicalMenuItemViewModel> TopLeafHierarchicalMenuItems { get; }
-        //public ObservableCollection<HierarchicalMenuItemViewModel> AllHierarchicalSubMenuItems { get; }
-        //public ObservableCollection<HierarchicalMenuItemViewModel> AllLeafHierarchicalSubMenuItems { get; private set; }
-        public ObservableCollection<HierarchicalMenuItemViewModel> AllHierarchicalMenuItems { get; }
+        public ObservableCollection<HierarchicalMenuItemViewModel> TopHierarchicalMenuItems { get; set; }
 
-        private bool _isLoading;
+        public HierarchicalMenuItemViewModel SelectedHierarchicalMenuItem { get; set; }
+
         public bool IsLoading
         {
-            get => _isLoading;
-            set => SetProperty<bool>(ref _isLoading, value);
-        }
+            get => field;
+            set => SetProperty<bool>(ref field, value);
+        } = false;
         #endregion
 
         #region Register TopMenu Selected Event
@@ -63,48 +65,78 @@ namespace Aksl.Modules.MenuSub.ViewModels
             {
                 ClearTopSelectedHierarchicalMenuItemViewModels();
 
-                var nowTopHierarchicalMenuItem = OnlyFindTopHierarchicalMenuItemViewModelByMenuItem(tmsse.SelectedMenuItem);
+                SetTopLevelSelected(tmsse.SelectedMenuItem);
 
-                if (nowTopHierarchicalMenuItem.Top is not null && nowTopHierarchicalMenuItem.Sub is not null && nowTopHierarchicalMenuItem.Top == nowTopHierarchicalMenuItem.Sub)
-                {
-                    if (_selectedMenuItem is not null && _selectedMenuItem.IsSubmenuItem)
-                    {
-                        nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
-                    }
+                //var nowTopHierarchicalMenuItem = OnlyFindTopHierarchicalMenuItemViewModelByMenuItem(tmsse.SelectedMenuItem);
 
-                    if (_selectedMenuItem is not null && _selectedMenuItem.IsTopLevelItem && _selectedMenuItem == nowTopHierarchicalMenuItem.Top)
-                    {
-                        nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
-                    }
-                }
+                //if (nowTopHierarchicalMenuItem.Top is not null && nowTopHierarchicalMenuItem.Sub is not null && nowTopHierarchicalMenuItem.Top == nowTopHierarchicalMenuItem.Sub)
+                //{
+                //    if (_selectedMenuItem is not null && _selectedMenuItem.IsSubmenuItem)
+                //    {
+                //        nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
+                //    }
 
-                if (nowTopHierarchicalMenuItem.Top is not null && nowTopHierarchicalMenuItem.Sub is not null && nowTopHierarchicalMenuItem.Top != nowTopHierarchicalMenuItem.Sub)
-                {
-                    if (_selectedMenuItem is not null && _selectedMenuItem.IsSubmenuItem && _selectedMenuItem == nowTopHierarchicalMenuItem.Sub)
-                    {
-                        nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
-                    }
-                }
+                //    if (_selectedMenuItem is not null && _selectedMenuItem.IsTopLevelItem && _selectedMenuItem == nowTopHierarchicalMenuItem.Top)
+                //    {
+                //        nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
+                //    }
+                //}
+
+                //if (nowTopHierarchicalMenuItem.Top is not null && nowTopHierarchicalMenuItem.Sub is not null && nowTopHierarchicalMenuItem.Top != nowTopHierarchicalMenuItem.Sub)
+                //{
+                //    if (_selectedMenuItem is not null && _selectedMenuItem.IsSubmenuItem && _selectedMenuItem == nowTopHierarchicalMenuItem.Sub)
+                //    {
+                //        nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
+                //    }
+                //}
             }, ThreadOption.UIThread, true);
         }
         #endregion
 
-        #region Find Top HierarchicalMenuItemViewModel Methods
-        private (HierarchicalMenuItemViewModel Top, HierarchicalMenuItemViewModel Sub) OnlyFindTopHierarchicalMenuItemViewModelByMenuItem(MenuItem menuItem)
+        #region Set TopLevelSelected Method
+        private void SetTopLevelSelected(Aksl.Infrastructure.MenuItem menuItem)
+        {
+            var nowTopHierarchicalMenuItem = OnlyFindTopHierarchicalMenuItemViewModelByMenuItem(menuItem);
+
+            if (nowTopHierarchicalMenuItem.Top is not null && nowTopHierarchicalMenuItem.Sub is not null && nowTopHierarchicalMenuItem.Top == nowTopHierarchicalMenuItem.Sub)
+            {
+                if (SelectedHierarchicalMenuItem is not null && SelectedHierarchicalMenuItem.IsSubmenuItem)
+                {
+                    nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
+                }
+
+                if (SelectedHierarchicalMenuItem is not null && SelectedHierarchicalMenuItem.IsTopLevelItem && SelectedHierarchicalMenuItem == nowTopHierarchicalMenuItem.Top)
+                {
+                    nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
+                }
+            }
+
+            if (nowTopHierarchicalMenuItem.Top is not null && nowTopHierarchicalMenuItem.Sub is not null && nowTopHierarchicalMenuItem.Top != nowTopHierarchicalMenuItem.Sub)
+            {
+                if (SelectedHierarchicalMenuItem is not null && SelectedHierarchicalMenuItem.IsSubmenuItem && SelectedHierarchicalMenuItem == nowTopHierarchicalMenuItem.Sub)
+                {
+                    nowTopHierarchicalMenuItem.Top.IsTopLevelSelected = true;
+                }
+            }
+        }
+        #endregion
+
+        #region Find Top HierarchicalMenuItemViewModel Method
+        private (HierarchicalMenuItemViewModel Top, HierarchicalMenuItemViewModel Sub) OnlyFindTopHierarchicalMenuItemViewModelByMenuItem(Aksl.Infrastructure.MenuItem menuItem)
         {
             HierarchicalMenuItemViewModel topHierarchicalMenuItemViewModel = null;
             HierarchicalMenuItemViewModel findHierarchicalMenuItemViewModel = null;
 
             int i = 0;
-            for (i = 0; i < AllHierarchicalMenuItems.Count; i++)
+            for (i = 0; i < TopHierarchicalMenuItems.Count; i++)
             {
                 if (findHierarchicalMenuItemViewModel is null)
                 {
-                    RecursiveSubMenuItemViewModel(AllHierarchicalMenuItems[i]);
+                    RecursiveSubMenuItemViewModel(TopHierarchicalMenuItems[i]);
                 }
                 else
                 {
-                    topHierarchicalMenuItemViewModel = AllHierarchicalMenuItems[i - 1];
+                    topHierarchicalMenuItemViewModel = TopHierarchicalMenuItems[i - 1];
                     break;
                 }
             }
@@ -117,20 +149,18 @@ namespace Aksl.Modules.MenuSub.ViewModels
                     return;
                 }
 
-                if (HasChild(parent))
+                if (parent.HasChildren)
                 {
                     foreach (var children in parent.Children)
                     {
-                        RecursiveSubMenuItemViewModel(children);
+                        RecursiveSubMenuItemViewModel(children as HierarchicalMenuItemViewModel);
                     }
                 }
             }
 
-            bool HasChild(HierarchicalMenuItemViewModel hmivm) => (hmivm is not null) && hmivm.Children.Any();
-
-            if (findHierarchicalMenuItemViewModel is not null && i == AllHierarchicalMenuItems.Count)
+            if (findHierarchicalMenuItemViewModel is not null && i == TopHierarchicalMenuItems.Count)
             {
-                topHierarchicalMenuItemViewModel = AllHierarchicalMenuItems[i - 1];
+                topHierarchicalMenuItemViewModel = TopHierarchicalMenuItems[i - 1];
             }
 
             return (Top: topHierarchicalMenuItemViewModel, Sub: findHierarchicalMenuItemViewModel);
@@ -143,35 +173,23 @@ namespace Aksl.Modules.MenuSub.ViewModels
             IsLoading = true;
 
             var parentMenuItem = await _menuService.GetMenuAsync(_rootMenuItem.NavigationName);
-
             _parentMenuItem = parentMenuItem;
-
             var subMenuItems = _parentMenuItem.SubMenus;
+            NodeResolver<HierarchicalMenuItemViewModel> nodeResolver = new();
+
             foreach (var smi in subMenuItems)
             {
-                //HierarchicalMenuItemViewModel topHierarchicalMenuItemViewModel = new(_eventAggregator, smi);
-                //TopHierarchicalMenuItems.Add(topHierarchicalMenuItemViewModel);
-                //var topLeafHierarchicalMenuItemViewModels = GetTopLeafHierarchicalMenuItemViewModels(topHierarchicalMenuItemViewModel);
-                //TopLeafHierarchicalMenuItems.AddRange(topLeafHierarchicalMenuItemViewModels);
-
-                //HierarchicalMenuItemViewModel parent = new(_eventAggregator, smi);
-                //AllHierarchicalSubMenuItems.Add(parent);
-                //List<MenuItem> allTravelMenuItems = new();
-                //await GetAllHierarchicalSubMenuItemViewModelsAsync(smi, allTravelMenuItems, parent);
-
-                List<MenuItem> allTravelMenuItems = new();
-                var topViewModel = await GetHierarchicalMenuItemViewModelsByMenuItem(smi, allTravelMenuItems);
-                AllHierarchicalMenuItems.Add(topViewModel);
+                HierarchicalMenuItemViewModel virtualParent = new();
+                Func<Aksl.Infrastructure.MenuItem, HierarchicalMenuItemViewModel, HierarchicalMenuItemViewModel> childResolver = ((m, p) => { return new HierarchicalMenuItemViewModel(m, p); });
+                var topItem = await nodeResolver.GetTopItemByMenuItemAsync(smi, virtualParent, childResolver, false);
+                TopHierarchicalMenuItems.Add(topItem);
             }
 
-            //var allLeafHierarchicalSubMenuItemViewModels = GetAllLeafHierarchicalSubMenuItemViewModels();
-            //AllLeafHierarchicalSubMenuItems = new(allLeafHierarchicalSubMenuItemViewModels.AllLeaf);
+            SetActiveContentNameAndPropertyChanged();
 
-            SetWorkspaceViewEventNameAndPropertyChanged();
-
-            void SetWorkspaceViewEventNameAndPropertyChanged()
+            void SetActiveContentNameAndPropertyChanged()
             {
-                foreach (var tmi in AllHierarchicalMenuItems)
+                foreach (var tmi in TopHierarchicalMenuItems)
                 {
                     RecursiveSubMenuItem(tmi);
                 }
@@ -182,259 +200,89 @@ namespace Aksl.Modules.MenuSub.ViewModels
 
                     if (hierarchicalMenuItemViewModel.IsLeaf)
                     {
-                        hierarchicalMenuItemViewModel.WorkspaceViewEventName = _rootMenuItem.WorkspaceViewEventName;
+                       // hierarchicalMenuItemViewModel.WorkspaceViewEventName = _rootMenuItem.WorkspaceViewEventName;
+                        hierarchicalMenuItemViewModel.ActiveContentName = _rootMenuItem.ActiveContentName;
                     }
 
-                    if (HasChild(hierarchicalMenuItemViewModel))
+                    if (hierarchicalMenuItemViewModel.HasChildren)
                     {
                         foreach (var smi in hierarchicalMenuItemViewModel.Children)
                         {
-                            RecursiveSubMenuItem(smi);
+                            RecursiveSubMenuItem(smi as HierarchicalMenuItemViewModel);
                         }
                     }
                 }
             }
-
-            void AddPropertyChanged(HierarchicalMenuItemViewModel curentHierarchicalMenuItemViewModel)
-            {
-                curentHierarchicalMenuItemViewModel.PropertyChanged += (sender, e) =>
-                {
-                    if (sender is HierarchicalMenuItemViewModel hmvm)
-                    {
-                        if (e.PropertyName == nameof(HierarchicalMenuItemViewModel.IsSelected))
-                        {
-                            ClearTopSelectedHierarchicalMenuItemViewModels();
-
-                            var selectedMenuItemCount = GetSelectedHierarchicalMenuItemViewModels().Count();
-                            if (_selectedMenuItem is null && hmvm.IsSelected)
-                            {
-                                _selectedMenuItem = hmvm;
-                                _selectedMenuItem.IsSelected = true;
-                            }
-                            else if ((_selectedMenuItem is not null) && !IsEqualsNameOrTitle(_selectedMenuItem?.Name, hmvm?.Name))
-                            {
-                                _selectedMenuItem.IsSelected = false;
-                                _selectedMenuItem = hmvm;
-                            }
-                            selectedMenuItemCount = GetSelectedHierarchicalMenuItemViewModels().Count();
-                        }
-                    }
-                };
-            }
-
-            bool HasChild(HierarchicalMenuItemViewModel hmivm) => (hmivm is not null) && hmivm.Children.Any();
 
             IsLoading = false;
         }
+
         #endregion
 
-        #region Get All Hierarchical HierarchicalMenuItemViewModels Method
-        internal async Task<HierarchicalMenuItemViewModel> GetHierarchicalMenuItemViewModelsByMenuItem(MenuItem menuItem, IList<MenuItem> travelMenuItems)
+        #region Set ActiveContentName Method
+
+        public void SetActiveContentNameAndPropertyChanged(string activeContentName)
         {
-            HierarchicalMenuItemViewModel virtualParent = new();
-
-            await RecursiveSubMenuItem(menuItem, virtualParent);
-
-            async Task RecursiveSubMenuItem(MenuItem currentMenuItem, HierarchicalMenuItemViewModel paren)
+            foreach (var tmi in TopHierarchicalMenuItems)
             {
-                HierarchicalMenuItemViewModel child = default;
+                RecursiveSubMenuItem(tmi);
+            }
 
-                if (!AnyEqualsMenuItems(travelMenuItems, currentMenuItem))
+            void RecursiveSubMenuItem(HierarchicalMenuItemViewModel hierarchicalMenuItemViewModel)
+            {
+                AddPropertyChanged(hierarchicalMenuItemViewModel);
+
+                if (hierarchicalMenuItemViewModel.IsLeaf)
                 {
-                    travelMenuItems.Add(currentMenuItem);
-
-                    child = new(currentMenuItem, paren);
+                    hierarchicalMenuItemViewModel.ActiveContentName = activeContentName;
                 }
 
-                if (HasNavigationName(currentMenuItem) && IsNextNavigation(currentMenuItem))
+                if (hierarchicalMenuItemViewModel.HasChildren)
                 {
-                    currentMenuItem = await _menuService.GetMenuAsync(currentMenuItem.NavigationName);
-                }
-
-                if (HasSubMenu(currentMenuItem) && IsNexOnNotLeaf(currentMenuItem))
-                {
-                    foreach (var smi in currentMenuItem.SubMenus)
+                    foreach (var smi in hierarchicalMenuItemViewModel.Children)
                     {
-                        await RecursiveSubMenuItem(smi, child);
+                        RecursiveSubMenuItem(smi as HierarchicalMenuItemViewModel);
                     }
                 }
             }
-
-            bool HasSubMenu(MenuItem mi) => (mi is not null) && mi.SubMenus.Any();
-
-            bool IsLeaf(MenuItem mi) => (mi is not null) && mi.SubMenus.Count <= 0;
-
-            bool HasTitle(MenuItem mi) => (mi is not null) && !string.IsNullOrEmpty(mi.Title);
-
-            bool IsNextNavigation(MenuItem mi) => (mi is not null) && mi.IsNextNavigation;
-
-            bool HasNavigationName(MenuItem mi) => (mi is not null) && !string.IsNullOrEmpty(mi.NavigationName);
-
-            bool IsNexOnNotLeaf(MenuItem mi) => (mi is not null) && mi.IsNexOnNotLeaf;
-
-            var child = virtualParent.Children.FirstOrDefault();
-            if (child is not null)
-            {
-                child.Parent = null;
-            }
-            return child;
         }
         #endregion
 
-        #region Get Top Leaf HierarchicalMenuItemViewModel Method
-        internal IEnumerable<HierarchicalMenuItemViewModel> GetTopLeafHierarchicalMenuItemViewModels(HierarchicalMenuItemViewModel topHieMenuItemViewModel)
+        #region RegisterPropertyChanged Method
+        private void AddPropertyChanged(HierarchicalMenuItemViewModel curentHierarchicalMenuItemViewModel)
         {
-            List<HierarchicalMenuItemViewModel> topLeafHierarchicalMenuItemViewModels = new();
-
-            RecursiveSubMenuItemViewModel(topHieMenuItemViewModel);
-
-            void RecursiveSubMenuItemViewModel(HierarchicalMenuItemViewModel currenyHieMenuItemViewModel)
+            curentHierarchicalMenuItemViewModel.PropertyChanged += (sender, e) =>
             {
-                if (!AnyEqualsHierarchicalMenuItemViewModels(topLeafHierarchicalMenuItemViewModels, currenyHieMenuItemViewModel) && currenyHieMenuItemViewModel.IsLeaf && currenyHieMenuItemViewModel.HasTitle)
+                if (sender is HierarchicalMenuItemViewModel hmvm)
                 {
-                    topLeafHierarchicalMenuItemViewModels.Add(currenyHieMenuItemViewModel);
-                }
-
-                if (HasChild(currenyHieMenuItemViewModel))
-                {
-                    foreach (var children in currenyHieMenuItemViewModel.Children)
+                    if (e.PropertyName == nameof(HierarchicalMenuItemViewModel.IsSelected))
                     {
-                        RecursiveSubMenuItemViewModel(children);
-                    }
-                }
-            }
+                        ClearTopSelectedHierarchicalMenuItemViewModels();
 
-            bool HasChild(HierarchicalMenuItemViewModel hmivm) => (hmivm is not null) && hmivm.Children.Any();
-
-            return topLeafHierarchicalMenuItemViewModels;
-        }
-        #endregion
-
-        #region Get All Hierarchical SubMenuItemViewModels Methods
-        private async Task GetAllHierarchicalSubMenuItemViewModelsAsync(MenuItem menuItem, IList<MenuItem> travelMenuItems, HierarchicalMenuItemViewModel currentHieMenuItemViewModel)
-        {
-            #region Method
-
-            await RecursiveSubMenuItem(menuItem);
-
-            async Task RecursiveSubMenuItem(MenuItem currentMenuItem)
-            {
-                if (!AnyEqualsMenuItems(travelMenuItems, currentMenuItem))
-                {
-                    travelMenuItems.Add(currentMenuItem);
-                }
-
-                var matchResult = FindMatchHierarchicalMenuItemViewModelByMenuItem(currentHieMenuItemViewModel, currentMenuItem);
-                Debug.Assert(matchResult.IsTrue);
-                if (HasNavigationName(currentMenuItem) && IsNextNavigation(currentMenuItem) && IsLeaf(currentMenuItem) && matchResult.FindHierarchicalMenuItemViewModel.IsLeaf)
-                {
-                    currentMenuItem = await _menuService.GetMenuAsync(currentMenuItem.NavigationName);
-
-                    if (HasSubMenu(currentMenuItem))
-                    {
-                        var parent = matchResult.FindHierarchicalMenuItemViewModel;
-
-                        foreach (var smi in currentMenuItem.SubMenus)
+                        var selectedMenuItemCount = GetSelectedHierarchicalMenuItemViewModels().Count();
+                        //if (_selectedMenuItem is null && hmvm.IsSelected)
+                        if (SelectedHierarchicalMenuItem is null && hmvm.IsSelected)
                         {
-                            HierarchicalMenuItemViewModel menuItemViewModel = new(_eventAggregator, smi, parent);
-                            parent.Children.Add(menuItemViewModel);
+                            SelectedHierarchicalMenuItem = hmvm;
+                            //_selectedMenuItem.IsSelected = true;
+                        }
+                        //else if ((_selectedMenuItem is not null) && !IsEqualsNameOrTitle(_selectedMenuItem?.Name, hmvm?.Name))
+                        else if ((SelectedHierarchicalMenuItem is not null) && hmvm.IsSelected && SelectedHierarchicalMenuItem != hmvm )
+                        {
+                            //_selectedMenuItem.IsSelected = false;
+                            //_selectedMenuItem = hmvm;
+                            SelectedHierarchicalMenuItem.IsSelected = false;
+                            SelectedHierarchicalMenuItem = hmvm;
+                        }
+                        selectedMenuItemCount = GetSelectedHierarchicalMenuItemViewModels().Count();
+
+                        if (!hmvm.DenyPublishWhenIsSelected && (hmvm.IsTopLevelItem || hmvm.IsSubmenuItem) && hmvm.IsSelected)
+                        {
+                            SetTopLevelSelected(hmvm.MenuItem);
                         }
                     }
                 }
-
-                if (HasSubMenu(currentMenuItem))
-                {
-                    foreach (var smi in currentMenuItem.SubMenus)
-                    {
-                        await RecursiveSubMenuItem(smi);
-                    }
-                }
-            }
-            #endregion
-
-            bool HasSubMenu(MenuItem mi) => (mi is not null) && mi.SubMenus.Any();
-
-            bool IsLeaf(MenuItem mi) => (mi is not null) && mi.SubMenus.Count <= 0;
-
-            bool IsNextNavigation(MenuItem mi) => (mi is not null) && mi.IsNextNavigation;
-
-            bool HasNavigationName(MenuItem mi) => (mi is not null) && !string.IsNullOrEmpty(mi.NavigationName);
-        }
-
-        private (HierarchicalMenuItemViewModel FindHierarchicalMenuItemViewModel, bool IsTrue) FindMatchHierarchicalMenuItemViewModelByMenuItem(HierarchicalMenuItemViewModel hieMenuItemViewModel, MenuItem menuItem)
-        {
-            var findViewModel = FindHierarchicalMenuItemViewModelByMenuItem(hieMenuItemViewModel, menuItem);
-
-            return (FindHierarchicalMenuItemViewModel: findViewModel, IsTrue: (findViewModel is not null));
-        }
-
-        internal HierarchicalMenuItemViewModel FindHierarchicalMenuItemViewModelByMenuItem(HierarchicalMenuItemViewModel hierarchicalMenuItemViewModel, MenuItem menuItem)
-        {
-            HierarchicalMenuItemViewModel findHierarchicalMenuItemViewModel = null;
-
-            RecursiveSubMenuItemViewModel(hierarchicalMenuItemViewModel);
-
-            void RecursiveSubMenuItemViewModel(HierarchicalMenuItemViewModel parent)
-            {
-                //if (IsEqualsHierarchicalMenuItemViewModel(parent, nameOrTitle))
-                if (IsEqualsNameOrTitle(parent.Name, menuItem.Name) || IsEqualsNameOrTitle(parent.Title, menuItem.Title))
-                {
-                    findHierarchicalMenuItemViewModel = parent;
-                    return;
-                }
-
-                if (HasChild(parent))
-                {
-                    foreach (var children in parent.Children)
-                    {
-                        RecursiveSubMenuItemViewModel(children);
-                    }
-                }
-            }
-
-            bool HasChild(HierarchicalMenuItemViewModel hmivm) => (hmivm is not null) && hmivm.Children.Any();
-
-            return findHierarchicalMenuItemViewModel;
-        }
-        #endregion
-
-        #region Get All LeafHierarchical SubMenuItemViewModels Methods
-        internal (IEnumerable<HierarchicalMenuItemViewModel> AllLeaf, Dictionary<HierarchicalMenuItemViewModel, IEnumerable<HierarchicalMenuItemViewModel>> Lookup) GetAllLeafHierarchicalSubMenuItemViewModels()
-        {
-            Dictionary<HierarchicalMenuItemViewModel, IEnumerable<HierarchicalMenuItemViewModel>> rootLeafHierarchicalSubMenuItemLookup = new();
-            List<HierarchicalMenuItemViewModel> allLeafHierarchicalMenuItemViewModels = new();
-
-            List<HierarchicalMenuItemViewModel> leafHierarchicalMenuItemViewModels = new();
-
-            foreach (var hmivm in AllHierarchicalMenuItems)
-            {
-                RecursiveSubMenuItemViewModel(hmivm);
-
-                rootLeafHierarchicalSubMenuItemLookup.Add(hmivm, leafHierarchicalMenuItemViewModels);
-
-                leafHierarchicalMenuItemViewModels = new();
-            }
-
-            void RecursiveSubMenuItemViewModel(HierarchicalMenuItemViewModel currenyHieMenuItemViewModel)
-            {
-                if (!AnyEqualsHierarchicalMenuItemViewModels(leafHierarchicalMenuItemViewModels, currenyHieMenuItemViewModel) && currenyHieMenuItemViewModel.IsLeaf && currenyHieMenuItemViewModel.HasTitle)
-                {
-                    leafHierarchicalMenuItemViewModels.Add(currenyHieMenuItemViewModel);
-                    allLeafHierarchicalMenuItemViewModels.Add(currenyHieMenuItemViewModel);
-                }
-
-                if (HasChild(currenyHieMenuItemViewModel))
-                {
-                    foreach (var children in currenyHieMenuItemViewModel.Children)
-                    {
-                        RecursiveSubMenuItemViewModel(children);
-                    }
-                }
-            }
-
-            bool HasChild(HierarchicalMenuItemViewModel hmivm) => (hmivm is not null) && hmivm.Children.Any();
-
-            return (AllLeaf: allLeafHierarchicalMenuItemViewModels, Lookup: rootLeafHierarchicalSubMenuItemLookup);
+            };
         }
         #endregion
 
@@ -457,7 +305,7 @@ namespace Aksl.Modules.MenuSub.ViewModels
         {
             List<HierarchicalMenuItemViewModel> hieMenuItemViewModels = new();
 
-            foreach (var hmivm in AllHierarchicalMenuItems)
+            foreach (var hmivm in TopHierarchicalMenuItems)
             {
                 RecursiveSubMenuItemViewModel(hmivm);
             }
@@ -469,16 +317,14 @@ namespace Aksl.Modules.MenuSub.ViewModels
                     hieMenuItemViewModels.Add(parent);
                 }
 
-                if (HasChild(parent))
+                if (parent.HasChildren)
                 {
                     foreach (var children in parent.Children)
                     {
-                        RecursiveSubMenuItemViewModel(children);
+                        RecursiveSubMenuItemViewModel(children as HierarchicalMenuItemViewModel);
                     }
                 }
             }
-
-            bool HasChild(HierarchicalMenuItemViewModel hmivm) => (hmivm is not null) && hmivm.Children.Any();
 
             return hieMenuItemViewModels;
         }
@@ -489,7 +335,7 @@ namespace Aksl.Modules.MenuSub.ViewModels
         {
             List<HierarchicalMenuItemViewModel> findHierarchicalMenuItemViewModels = new();
 
-            foreach (var hmivm in AllHierarchicalMenuItems)
+            foreach (var hmivm in TopHierarchicalMenuItems)
             {
                 RecursiveSubMenuItemViewModel(hmivm);
             }
@@ -501,36 +347,20 @@ namespace Aksl.Modules.MenuSub.ViewModels
                     findHierarchicalMenuItemViewModels.Add(parent);
                 }
 
-                if (HasChild(parent))
+                if (parent.HasChildren)
                 {
                     foreach (var children in parent.Children)
                     {
-                        RecursiveSubMenuItemViewModel(children);
+                        RecursiveSubMenuItemViewModel(children as HierarchicalMenuItemViewModel);
                     }
                 }
             }
-
-            bool HasChild(HierarchicalMenuItemViewModel hmivm) => (hmivm is not null) && hmivm.Children.Any();
 
             return findHierarchicalMenuItemViewModels;
         }
         #endregion
 
         #region Contain Methods
-        private bool AnyEqualsHierarchicalMenuItemViewModels(IEnumerable<HierarchicalMenuItemViewModel> hierarchicalMenuItemViewModels, HierarchicalMenuItemViewModel hierarchicalMenuItemViewModel)
-        {
-            var isEquals = hierarchicalMenuItemViewModels.Any(hmivm => IsEqualsNameOrTitle(hmivm.Name, hierarchicalMenuItemViewModel.Name) || IsEqualsNameOrTitle(hmivm.Title, hierarchicalMenuItemViewModel.Title));
-
-            return isEquals;
-        }
-
-        private bool AnyEqualsMenuItems(IEnumerable<MenuItem> menuItems, MenuItem menuItem)
-        {
-            var isEquals = menuItems.Any(mi => IsEqualsNameOrTitle(mi.Name, menuItem.Name) || IsEqualsNameOrTitle(mi.Title, menuItem.Title));
-
-            return isEquals;
-        }
-
         private bool IsEqualsNameOrTitle(string nameOrTitle, string otherNameOrTitle)
         {
             if (string.IsNullOrEmpty(nameOrTitle) || string.IsNullOrEmpty(otherNameOrTitle))
@@ -538,8 +368,8 @@ namespace Aksl.Modules.MenuSub.ViewModels
                 return false;
             }
 
-            var isEquals = (!string.IsNullOrEmpty(nameOrTitle) && nameOrTitle.Equals(otherNameOrTitle, StringComparison.InvariantCultureIgnoreCase)) ||
-                           (!string.IsNullOrEmpty(otherNameOrTitle) && otherNameOrTitle.Equals(nameOrTitle, StringComparison.InvariantCultureIgnoreCase));
+            var isEquals =  nameOrTitle.Equals(otherNameOrTitle, StringComparison.InvariantCultureIgnoreCase) ||
+                            otherNameOrTitle.Equals(nameOrTitle, StringComparison.InvariantCultureIgnoreCase);
 
             return isEquals;
         }

@@ -62,6 +62,16 @@
                     <Setter Property="FontSize"
                             Value="16.3" />
                 </MultiTrigger>
+                <DataTrigger Binding="{Binding Path=IsPaneOpen}"
+                             Value="True">
+                    <Setter Property="ToolTip"
+                            Value="{x:Null}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsPaneOpen}"
+                             Value="False">
+                    <Setter Property="ToolTip"
+                            Value="{Binding Path=Title,Mode=OneWay}" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>

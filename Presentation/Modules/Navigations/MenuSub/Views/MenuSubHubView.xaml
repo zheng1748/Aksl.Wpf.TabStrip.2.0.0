@@ -15,11 +15,14 @@
             <RowDefinition Height="8" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-              Background="{StaticResource PrimaryThemeBrush}">
+        <!--<Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>-->
+        <Grid  Grid.Row="0"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               Background="{StaticResource PrimaryThemeBrush}">
             <views:HierarchicalMenusView DataContext="{Binding Path=HierarchicalMenus}"
                                          HorizontalAlignment="Stretch"
                                          VerticalContentAlignment="Center"
@@ -29,8 +32,9 @@
         <Separator Grid.Row="1"
                    Margin="0,1,0,0"
                    Height="8"
-                   HorizontalAlignment="Stretch"
-                   BorderBrush="#193441" />
+                   BorderBrush="#193441"
+                   Grid.RowSpan="2"
+                   VerticalAlignment="Top" />
         <!--<GridSplitter  Grid.Row="1"
                        Margin="0,1,0,0" HorizontalAlignment="Stretch"
                        BorderBrush="#193441" />-->
@@ -39,11 +43,11 @@
                 Background="WhiteSmoke"
                 HorizontalAlignment="Stretch"
                 BorderThickness="2"
-                CornerRadius="5"
+                CornerRadius="5" Grid.Row="2"
                 BorderBrush="Black">-->
-        <acview:RandomActiveContentView Grid.Row="2"
-                                        DataContext="{Binding Path=BottomActiveContentViewModel}"
-                                        Margin="2">
+        <acview:RandomActiveContentView  Grid.Row="2"
+                                         DataContext="{Binding Path=BottomActiveContentViewModel}"
+                                         Margin="2">
             <acview:RandomActiveContentView.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform />

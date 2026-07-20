@@ -7,7 +7,7 @@
     <!--ThemeMode="System"-->
     <Application.Resources>
         <ResourceDictionary>
-            <sys:String x:Key="AppName">Wpf Samples</sys:String>
+            <sys:String x:Key="AppName">Wpf TabStrip</sys:String>
 
             <ResourceDictionary.MergedDictionaries>
                 <!--<ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />-->

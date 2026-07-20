@@ -1,20 +1,12 @@
 ﻿using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.TabStrip;
-using Prism;
 using Prism.Events;
-using Prism.Ioc;
 using Prism.Mvvm;
-using Prism.Regions;
-using Prism.Unity;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Unity;
 
 namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
 {
@@ -23,7 +15,6 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
         #region Members
         protected readonly IEventAggregator _eventAggregator; 
         private readonly IDialogViewService _dialogViewService;
-        private readonly IMenuService _menuService;
         #endregion
 
         #region Constructors
@@ -31,7 +22,6 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
         {
             _eventAggregator = PrismUnityExtensions.GetEventAggregator();
             _dialogViewService = PrismUnityExtensions.GetDialogViewService();
-            _menuService = PrismUnityExtensions.GetMenuService(); 
 
             AllLeafHamburgerMenuSideBarItems = new();
 

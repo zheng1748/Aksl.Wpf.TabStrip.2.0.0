@@ -9,9 +9,11 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Unity;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using Unity;
 
 namespace Aksl.Modules.MenuSub.ViewModels
@@ -23,7 +25,7 @@ namespace Aksl.Modules.MenuSub.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IDialogViewService _dialogViewService;
         private readonly IMenuService _menuService;
-        private string _workspaceViewEventName;
+        //private string _workspaceViewEventName;
         #endregion
 
         #region Constructors
@@ -63,94 +65,125 @@ namespace Aksl.Modules.MenuSub.ViewModels
         #endregion
 
         #region Register BuildWorkspaceView Event
-        private void RegisterBuildWorkspaceViewEvents()
-        {
-            var buildHWorkspaceViewEvent = _eventAggregator.GetEvent(_workspaceViewEventName) as OnBuildWorkspaceViewEventbase;
-            Debug.Assert(buildHWorkspaceViewEvent is not null);
+        //private void RegisterBuildWorkspaceViewEvents()
+        //{
+        //    var buildHWorkspaceViewEvent = _eventAggregator.GetEvent(_workspaceViewEventName) as OnBuildWorkspaceViewEventbase;
+        //    Debug.Assert(buildHWorkspaceViewEvent is not null);
 
-            buildHWorkspaceViewEvent.Subscribe(async (bmve) =>
-            {
-                var currentMenuItem = bmve.CurrentMenuItem;
+        //    buildHWorkspaceViewEvent.Subscribe(async (bmve) =>
+        //    {
+        //        var currentMenuItem = bmve.CurrentMenuItem;
 
-                try
-                {
-                    await LoadViewAsync();
+        //        try
+        //        {
+        //            await LoadViewAsync();
 
-                    #region LoadView Method
-                    async Task LoadViewAsync()
-                    {
-                        if (IsAddViewToBottomContent())
-                        {
-                            AddViewToBottomContent();
-                        }
+        //            #region LoadView Method
+        //            async Task LoadViewAsync()
+        //            {
+        //                if (IsAddViewToBottomContent())
+        //                {
+        //                    AddViewToBottomContent();
+        //                }
 
-                        if (IsNavigationToBottomContent())
-                        {
-                            NavigationToBottomContent();
-                        }
-                    }
+        //                if (IsNavigationToBottomContent())
+        //                {
+        //                    NavigationToBottomContent();
+        //                }
+        //            }
 
-                    void AddViewToBottomContent()
-                    {
-                        ActiveContentManagerExtensions.AddViewToRandomContentAsync(currentMenuItem, this.ActiveContentName).Await(completedCallback: null, configureAwait: true, errorCallback: (ex) =>
-                        {
-                            System.Windows.Application.Current?.Dispatcher.Invoke(async () =>
-                            {
-                                await _dialogViewService.AlertAsync(message: $"{ex.Message} \".", title: $"Error:Add View To BottomContent");
-                            });
-                        });
-                    }
+        //            void AddViewToBottomContent()
+        //            {
+        //                ActiveContentManagerExtensions.AddViewToRandomContentAsync(currentMenuItem, this.ActiveContentName).Await(completedCallback: null, configureAwait: true, errorCallback: (ex) =>
+        //                {
+        //                    System.Windows.Application.Current?.Dispatcher.Invoke(async () =>
+        //                    {
+        //                        await _dialogViewService.AlertAsync(message: $"{ex.Message} \".", title: $"Error:Add View To BottomContent");
+        //                    });
+        //                });
+        //            }
 
-                    void NavigationToBottomContent()
-                    {
-                        ActiveContentManagerExtensions.NavigationToRandomContentAsync(currentMenuItem, this.ActiveContentName, new() { { "CurrentMenuItem", currentMenuItem } }).Await(completedCallback: null, configureAwait: true, errorCallback: (ex) =>
-                        {
-                            System.Windows.Application.Current?.Dispatcher.Invoke(async () =>
-                            {
-                                await _dialogViewService.AlertAsync(message: $"{ex.Message} \".", title: $"Error:Add View To RightContent");
-                            });
-                        });
-                    }
+        //            void NavigationToBottomContent()
+        //            {
+        //                ActiveContentManagerExtensions.NavigationToRandomContentAsync(currentMenuItem, this.ActiveContentName, new() { { "CurrentMenuItem", currentMenuItem } }).Await(completedCallback: null, configureAwait: true, errorCallback: (ex) =>
+        //                {
+        //                    System.Windows.Application.Current?.Dispatcher.Invoke(async () =>
+        //                    {
+        //                        await _dialogViewService.AlertAsync(message: $"{ex.Message} \".", title: $"Error:Add View To RightContent");
+        //                    });
+        //                });
+        //            }
 
-                    bool IsAddViewToBottomContent() =>
-                            !currentMenuItem.HasNextSubMenu() && currentMenuItem.HasViewName() && !currentMenuItem.IsNexApplication;
+        //            bool IsAddViewToBottomContent() =>
+        //                    !currentMenuItem.HasNextSubMenu() && currentMenuItem.HasViewName() && !currentMenuItem.IsNexApplication;
 
-                    bool IsNavigationToBottomContent() =>
-                            currentMenuItem.HasNextSubMenu() && currentMenuItem.HasViewName() && currentMenuItem.IsNexApplication;
-                    #endregion
-                }
-                catch (Exception ex)
-                {
-                    await _dialogViewService.AlertAsync(message: $"Unable to loading \"{currentMenuItem.ModuleName}\" module.: \"{ex.Message}\"", title: "Error: Load Module");
-                }
-            }, ThreadOption.UIThread, true);
-        }
+        //            bool IsNavigationToBottomContent() =>
+        //                    currentMenuItem.HasNextSubMenu() && currentMenuItem.HasViewName() && currentMenuItem.IsNexApplication;
+        //            #endregion
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            await _dialogViewService.AlertAsync(message: $"Unable to loading \"{currentMenuItem.ModuleName}\" module.: \"{ex.Message}\"", title: "Error: Load Module");
+        //        }
+        //    }, ThreadOption.UIThread, true);
+        //}
         #endregion
 
         #region Create HierarchicalMenus ViewModel Method
-        private async Task CreateHierarchicalMenusViewModel(MenuItem currentMenuItem)
+        private Aksl.Infrastructure.MenuItem _rootMenuItem;
+        private async Task CreateHierarchicalMenusViewModel(MenuItem rootMenuItem)
         {
-            IsLoading = true;
-
-            HierarchicalMenus = new(_eventAggregator, _menuService, currentMenuItem);
-            AddPropertyChanged();
-
-            void AddPropertyChanged()
+            try
             {
-                HierarchicalMenus.PropertyChanged += (sender, e) =>
-                {
-                    if (sender is HierarchicalMenusViewModel hmvm)
-                    {
-                        if (e.PropertyName == nameof(HierarchicalMenusViewModel.IsLoading) && !hmvm.IsLoading)
-                        {
-                            IsLoading = false;
-                        }
-                    }
-                };
-            }
+                IsLoading = true;
+                _rootMenuItem = rootMenuItem;
 
-            await HierarchicalMenus.CreateHierarchicalMenuItemViewModelsAsync();
-            RaisePropertyChanged(nameof(HierarchicalMenus));
+                var parentMenuItem = await _menuService.GetMenuAsync(rootMenuItem.NavigationName);
+                var subMenuItems = parentMenuItem.SubMenus;
+                NodeResolver<HierarchicalMenuItemViewModel> nodeResolver = new();
+                List<HierarchicalMenuItemViewModel> topHierarchicalMenuItems = new();
+
+                foreach (var smi in subMenuItems)
+                {
+                    HierarchicalMenuItemViewModel virtualParent = new();
+                    Func<Aksl.Infrastructure.MenuItem, HierarchicalMenuItemViewModel, HierarchicalMenuItemViewModel> childResolver = ((m, p) => { return new HierarchicalMenuItemViewModel(m, p); });
+                    var topItem = await nodeResolver.GetTopItemByMenuItemAsync(smi, virtualParent, childResolver, false);
+                    topHierarchicalMenuItems.Add(topItem);
+                }
+
+                // HierarchicalMenus = new(_eventAggregator, _menuService, currentMenuItem);
+                HierarchicalMenus = new()
+                {
+                    TopHierarchicalMenuItems = new(topHierarchicalMenuItems)
+                };
+                //AddPropertyChanged();
+
+                //void AddPropertyChanged()
+                //{
+                //    HierarchicalMenus.PropertyChanged += (sender, e) =>
+                //    {
+                //        if (sender is HierarchicalMenusViewModel hmvm)
+                //        {
+                //            if (e.PropertyName == nameof(HierarchicalMenusViewModel.IsLoading) && !hmvm.IsLoading)
+                //            {
+                //                IsLoading = false;
+                //            }
+                //        }
+                //    };
+                //}
+
+                // await HierarchicalMenus.CreateHierarchicalMenuItemViewModelsAsync();
+                HierarchicalMenus.SetActiveContentNameAndPropertyChanged(rootMenuItem.ActiveContentName);
+                RaisePropertyChanged(nameof(HierarchicalMenus));
+            }
+            catch(Exception ex)
+            {
+                await _dialogViewService.AlertAsync(message: $"{ex.Message} \".", title: $"Create Hierarchical Menus");
+            }
+            finally 
+            {
+                IsLoading = false;
+            }
         }
         #endregion
 
@@ -160,15 +193,15 @@ namespace Aksl.Modules.MenuSub.ViewModels
             var parameters = navigationContext.Parameters;
             if (parameters.TryGetValue("CurrentMenuItem", out MenuItem currentMenuItem))
             {
-              //  WorkspaceRegionName = currentMenuItem.WorkspaceRegionName;
-                _workspaceViewEventName = currentMenuItem.WorkspaceViewEventName;
+                //  WorkspaceRegionName = currentMenuItem.WorkspaceRegionName;
+                //_workspaceViewEventName = currentMenuItem.WorkspaceViewEventName;
 
-               ActiveContentName = currentMenuItem.ActiveContentName;
-               RegisterActiveContent();
+                ActiveContentName = currentMenuItem.ActiveContentName;
+                RegisterActiveContent();
 
-                RegisterBuildWorkspaceViewEvents();
+               // RegisterBuildWorkspaceViewEvents();
 
-                CreateHierarchicalMenusViewModel(currentMenuItem).GetAwaiter().GetResult();
+                CreateHierarchicalMenusViewModel(currentMenuItem).Await();
             }
         }
 

@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aksl.TabActiveContents.Assist\Aksl.TabActiveContents.Assist.csproj" />
 	  <ProjectReference Include="..\Prism Library\Prism.Core\Prism.Core.csproj" />
 	  <ProjectReference Include="..\Prism Library\Prism.Unity.Wpf\Prism.Unity.Wpf.csproj" />
 	  <ProjectReference Include="..\Prism Library\Prism.Wpf\Prism.Wpf.csproj" />

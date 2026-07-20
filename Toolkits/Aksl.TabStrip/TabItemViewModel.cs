@@ -38,42 +38,40 @@ namespace Aksl.TabStrip.ViewModels
         public string Title => _tabInformation.Title;
         public string ViewName => _tabInformation.ViewName;
 
-        private Type? _viewElementType = default;
         public Type ViewElementType
         {
             get
             {
-                if (_viewElementType is null)
+                if (field is null)
                 {
                     if (!string.IsNullOrEmpty(_tabInformation.ViewName))
                     {
                         string viewTypeAssemblyQualifiedName = _tabInformation.ViewName;
-                        _viewElementType = Type.GetType(viewTypeAssemblyQualifiedName);
+                        field = Type.GetType(viewTypeAssemblyQualifiedName);
                     }
                 }
 
-                return _viewElementType;
+                return field;
             }
         }
 
-        private DependencyObject? _viewElement = default;
         public DependencyObject? ViewElement
         {
             get
             {
-                if (_viewElement is null)
+                if (field is null)
                 {
                     if (ViewElementType is not null)
                     {
-                        _viewElement = Activator.CreateInstance(ViewElementType) as DependencyObject;
+                        field = Activator.CreateInstance(ViewElementType) as DependencyObject;
                     }
                 }
 
-                return _viewElement;
+                return field;
             }
             set
             {
-                SetProperty<DependencyObject>(ref _viewElement, value);
+                SetProperty<DependencyObject>(ref field, value);
             }
         }
 

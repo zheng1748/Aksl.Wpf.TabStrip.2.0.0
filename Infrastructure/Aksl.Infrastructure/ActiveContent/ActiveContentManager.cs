@@ -31,7 +31,7 @@ public class ActiveContentManager
     }
     #endregion
 
-    #region Create ContentInformation Method
+    #region Create ContentInformation Methods
     public ContentInformation CreateContentInformation(string name, string title, string viewTypeAssemblyQualifiedName, NavigationParameters navigationParameters = null)
     {
         Type viewType = Type.GetType(viewTypeAssemblyQualifiedName);
@@ -71,6 +71,8 @@ public class ActiveContentManager
 
     public ContentInformation CreateContentInformation(Infrastructure.MenuItem menuItem, NavigationParameters navigationParameters = null)
     {
+        //  CreateContentInformation(menuItem.Name, menuItem.Title, menuItem.ViewName, navigationParameters);
+
         var viewName = menuItem.GetViewTypeName();
 
         var unityContainer = PrismIocExtensions.GetUnityContainer();
@@ -84,15 +86,14 @@ public class ActiveContentManager
         };
 
         var registeredView = unityContainer.Resolve<object>(viewName);
-
         if (registeredView is FrameworkElement frameworkElement)
         {
             MvvmHelpers.AutowireViewModel(registeredView);
 
-            if (navigationParameters is null)
-            {
-                navigationParameters = new() { { "CurrentMenuItem", menuItem } };
-            }
+            //if (navigationParameters is null)
+            //{
+            //    navigationParameters = new() { { "CurrentMenuItem", menuItem } };
+            //}
 
             NavigationContext navigationContext = new(regionNavigationService, new Uri(viewName, UriKind.RelativeOrAbsolute));
             navigationContext.Parameters = navigationParameters;
@@ -108,18 +109,29 @@ public class ActiveContentManager
     }
     #endregion
 
-    #region Add View To Random Content Method
-    public async Task AddViewToRandomContentAsync(Infrastructure.MenuItem menuItem, RandomActiveContentViewModel randomActiveContentViewModel)
+    #region Register Navigation For RandomContentt Method
+    public void RegisterNavigationForRandomContentt(string name, string title, string viewTypeAssemblyQualifiedName, RandomActiveContentViewModel randomActiveContentViewModel, NavigationParameters navigationParameters, bool isActive = true)
     {
-        var viewName = menuItem.GetViewTypeName();
-
-        ContentInformation contentInformation = new()
+        var currentView = randomActiveContentViewModel.GetStoreViewElementByName(name);
+        if (currentView is null)
         {
-            Name = menuItem.Name,
-            Title = menuItem.Title,
-            ViewName = menuItem.ViewName
-        };
+            ActiveContents.ContentInformation contentInformation = CreateContentInformation(name, title, viewTypeAssemblyQualifiedName, navigationParameters);
+            randomActiveContentViewModel.Add(contentInformation, isActive);
+        }
+    }
+    #endregion
 
+    #region Add View To Random Content Method
+    public async Task AddViewToRandomContentAsync(Infrastructure.MenuItem menuItem, RandomActiveContentViewModel randomActiveContentViewModel, NavigationParameters navigationParameters = null, bool isActive = true)
+    {
+        //var viewName = menuItem.GetViewTypeName();
+
+        //ContentInformation contentInformation = new()
+        //{
+        //    Name = menuItem.Name,
+        //    Title = menuItem.Title,
+        //    ViewName = menuItem.ViewName
+        //};
         var currentView = randomActiveContentViewModel.GetStoreViewElementByName(menuItem.Name);
         if (currentView is not null)
         {
@@ -130,20 +142,20 @@ public class ActiveContentManager
             }
             else
             {
-                // ActiveContents.ContentInformation contentInformation = await CreateContentInformationAsync(menuItem, navigationParameters);
+                ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
                 randomActiveContentViewModel.RetsetContentItem(contentInformation);
             }
         }
         else
         {
-            // ActiveContents.ContentInformation contentInformation = await CreateContentInformationAsync(menuItem, navigationParameters);
-            randomActiveContentViewModel.Add(contentInformation);
+            ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
+            randomActiveContentViewModel.Add(contentInformation, isActive);
         }
     }
     #endregion
 
     #region  NavigationTo To Random Content Method
-    public async Task NavigationToRandomContentAsync(Infrastructure.MenuItem menuItem, RandomActiveContentViewModel randomActiveContentViewModel, NavigationParameters navigationParameters)
+    public async Task NavigationToRandomContentAsync(Infrastructure.MenuItem menuItem, RandomActiveContentViewModel randomActiveContentViewModel, NavigationParameters navigationParameters, bool isActive = true)
     {
         var viewName = menuItem.GetViewTypeName();
 
@@ -164,25 +176,12 @@ public class ActiveContentManager
         else
         {
             ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
-            randomActiveContentViewModel.Add(contentInformation);
-        }
-    }
-    #endregion
-
-    #region Register Navigation For RandomContentt Method
-    public void RegisterNavigationForRandomContentt(string name, string title, string viewTypeAssemblyQualifiedName, RandomActiveContentViewModel randomActiveContentViewModel, NavigationParameters navigationParameters, bool isActive = true)
-    {
-        var currentView = randomActiveContentViewModel.GetStoreViewElementByName(name);
-        if (currentView is null)
-        {
-            ActiveContents.ContentInformation contentInformation = CreateContentInformation(name, title, viewTypeAssemblyQualifiedName, navigationParameters);
-
             randomActiveContentViewModel.Add(contentInformation, isActive);
         }
     }
     #endregion
 
-    #region Add View To Content Method
+    #region Add View To Sequence Content Method
     public async Task AddViewToSequenceContentAsync(Infrastructure.MenuItem menuItem, SequenceActiveContentViewModel sequenceActiveContentViewModel, NavigationParameters navigationParameters = null)
     {
         var viewName = menuItem.GetViewTypeName();

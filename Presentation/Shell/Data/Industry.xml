@@ -56,7 +56,7 @@
 		  IconKind="Compress"  IsCacheable="True"
 			  ModuleName=""
 			  ViewName=""
-		       IsNextNavigation="False"
+		       IsNextNavigation="True"
 			  NavigationName="AirCompressers">
 	</MenuItem>
 </MenuItem>

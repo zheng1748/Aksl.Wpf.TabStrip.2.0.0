@@ -34,15 +34,14 @@ namespace Aksl.ActiveContents.ViewModels
         public ObservableCollection<ActiveContentItemViewModel> ActiveContentItems { get; }
         public List<ActiveContentItemViewModel> StoreContentItems { get; }
 
-        private ActiveContentItemViewModel _selectedContentItem;
         public ActiveContentItemViewModel SelectedContentItem
         {
-            get => _selectedContentItem;
+            get => field;
             set
             {
-                if (SetProperty<ActiveContentItemViewModel>(ref _selectedContentItem, value))
+                if (SetProperty<ActiveContentItemViewModel>(ref field, value))
                 {
-                    if (_selectedContentItem is not null)
+                    if (field is not null)
                     {
                         SelectedIndex = GetIndexSelectedActiveContentItem();
                     }
@@ -54,11 +53,10 @@ namespace Aksl.ActiveContents.ViewModels
             }
         }
 
-        private int _selectedIndex = -1;
         public int SelectedIndex
         {
-            get => _selectedIndex;
-            set => SetProperty<int>(ref _selectedIndex, value);
+            get => field;
+            set => SetProperty<int>(ref field, value);
         }
 
         public bool CanMove
