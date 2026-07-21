@@ -48,6 +48,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Unity;
 using Aksl.Modules.MenuSub;
+using Aksl.Modules.TabBar;
 
 namespace Aksl.Modules.Shell
 {
@@ -222,7 +223,7 @@ namespace Aksl.Modules.Shell
 
             //_ = moduleCatalog.AddModule(nameof(ExpandHamburgerMenuTabModule), typeof(ExpandHamburgerMenuTabModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
             _ = moduleCatalog.AddModule(nameof(MenuSubModule), typeof(MenuSubModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
-            //_ = moduleCatalog.AddModule(nameof(TabBarModule), typeof(TabBarModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
+            _ = moduleCatalog.AddModule(nameof(TabBarModule), typeof(TabBarModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
 
             _ = moduleCatalog.AddModule(nameof(HomeModule), typeof(HomeModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
             _ = moduleCatalog.AddModule(nameof(PipelineModule), typeof(PipelineModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);

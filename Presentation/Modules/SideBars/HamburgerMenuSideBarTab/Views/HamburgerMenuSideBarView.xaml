@@ -130,6 +130,18 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsPaneOpen}"
+                             Value="True">
+                    <Setter Property="ToolTip"
+                            Value="{x:Null}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsPaneOpen}"
+                             Value="False">
+                    <Setter Property="ToolTip"
+                            Value="{Binding Title}" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
         
         <Style x:Key="hamburgerMenuSideBarListViewItem"

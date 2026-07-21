@@ -120,6 +120,7 @@
     <ProjectReference Include="..\Modules\Industry\PipelineView\PipelineView.csproj" />
     <ProjectReference Include="..\Modules\Industry\ThermometerrView\ThermometerView.csproj" />
     <ProjectReference Include="..\Modules\Navigations\MenuSub\MenuSub.csproj" />
+    <ProjectReference Include="..\Modules\Navigations\TabBar\TabBar.csproj" />
     <ProjectReference Include="..\Modules\Others\OthersView\OthersView.csproj" />
     <ProjectReference Include="..\Modules\Radars\RadarMapView.csproj" />
     <ProjectReference Include="..\Modules\SideBars\HamburgerMenuNavigationSideBarTab\HamburgerMenuNavigationSideBarTab.csproj" />

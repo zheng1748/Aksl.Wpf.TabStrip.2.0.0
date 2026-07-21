@@ -22,11 +22,10 @@
 			  IsCacheable="True"
 			  ModuleName=""
 			  IsNexApplication="False"   
-			  IsNexOnNotLeaf="True"
 	          IsNextNavigation="False"
 			  NavigationName="Industry">
 	</MenuItem>
-	<MenuItem Id="3"
+	<!--<MenuItem Id="3"
 			  Name="RadarsManager"
 			  Title="Radars"
 			  Level="1"
@@ -37,6 +36,18 @@
 		      ActiveContentName=""
 			  IsNextNavigation="True"
 			  NavigationName="Radars">
+	</MenuItem>-->
+	<MenuItem Id="3"
+		  Name="RadarsManager"
+		  Title="Radars"
+		  Level="1"
+		  IconKind="Radar"
+		  IsCacheable="True"
+		 ModuleName="TabBarModule"
+		  ViewName="Aksl.Modules.TabBar.Views.TabBarHubView,Aksl.Modules.TabBar"
+		  IsNexApplication="True"
+		  IsNextNavigation="False"
+		  NavigationName="Radars">
 	</MenuItem>
 	<!--<MenuItem Id="5"
 			  Name="AccountManager"
@@ -48,16 +59,17 @@
 			  NavigationName="Accounts">
 	</MenuItem>-->
 	<MenuItem Id="5"
-	          Name="AccountManager"
-	          Title="Accounts"
-	          Level="1"
-	          IconKind="AccountCowboyHat"
-	          ModuleName="MenuSubModule"
-	          ViewName="Aksl.Modules.MenuSub.Views.MenuSubHubView,Aksl.Modules.MenuSub"
-	          ActiveContentName="AccountMenuSubBottomActiveContent"
-	          IsNexApplication="True"
-	          IsNextNavigation="False"
-	          NavigationName="Accounts">
+		  Name="AccountManager"
+		  Title="Accounts"
+		  Level="1"
+		  IconKind="AccountCowboyHat"
+		 IsCacheable="False"
+		  ModuleName="MenuSubModule"
+		  ViewName="Aksl.Modules.MenuSub.Views.MenuSubHubView,Aksl.Modules.MenuSub"
+		  ActiveContentName="AccountMenuSubBottomActiveContent"
+		 IsNexApplication="True"
+	     IsNextNavigation="False"
+		  NavigationName="Accounts">
 	</MenuItem>
 	<MenuItem Id="5"
 		  Name="OthersManager"

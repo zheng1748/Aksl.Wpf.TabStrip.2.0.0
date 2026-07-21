@@ -75,6 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aksl.TabStrip", "Toolkits\A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuSub", "Presentation\Modules\Navigations\MenuSub\MenuSub.csproj", "{26FD9E45-1FB3-9070-0F02-CA4924F17859}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabBar", "Presentation\Modules\Navigations\TabBar\TabBar.csproj", "{27353808-9499-F209-3C7A-2641BAA2C0E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -267,6 +269,14 @@ Global
 		{26FD9E45-1FB3-9070-0F02-CA4924F17859}.Release|Any CPU.Build.0 = Release|Any CPU
 		{26FD9E45-1FB3-9070-0F02-CA4924F17859}.Release|x86.ActiveCfg = Release|Any CPU
 		{26FD9E45-1FB3-9070-0F02-CA4924F17859}.Release|x86.Build.0 = Release|Any CPU
+		{27353808-9499-F209-3C7A-2641BAA2C0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27353808-9499-F209-3C7A-2641BAA2C0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27353808-9499-F209-3C7A-2641BAA2C0E3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{27353808-9499-F209-3C7A-2641BAA2C0E3}.Debug|x86.Build.0 = Debug|Any CPU
+		{27353808-9499-F209-3C7A-2641BAA2C0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27353808-9499-F209-3C7A-2641BAA2C0E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27353808-9499-F209-3C7A-2641BAA2C0E3}.Release|x86.ActiveCfg = Release|Any CPU
+		{27353808-9499-F209-3C7A-2641BAA2C0E3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -304,6 +314,7 @@ Global
 		{E96C5A7E-2312-73CB-10AA-8F77F0F10803} = {8B68315F-10BA-4E2B-AF2E-312DCD160766}
 		{D5A91DFA-B7FA-E7B5-ECAE-927901A92347} = {8B68315F-10BA-4E2B-AF2E-312DCD160766}
 		{26FD9E45-1FB3-9070-0F02-CA4924F17859} = {57DDE468-3E55-4318-9877-DDD01C913138}
+		{27353808-9499-F209-3C7A-2641BAA2C0E3} = {57DDE468-3E55-4318-9877-DDD01C913138}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D877B086-37FD-4AA5-8AB3-CF7E87E27425}

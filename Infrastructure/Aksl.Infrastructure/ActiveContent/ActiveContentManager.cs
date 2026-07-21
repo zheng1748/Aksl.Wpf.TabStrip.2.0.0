@@ -142,7 +142,7 @@ public class ActiveContentManager
             }
             else
             {
-                ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
+               ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
                 randomActiveContentViewModel.RetsetContentItem(contentInformation);
             }
         }

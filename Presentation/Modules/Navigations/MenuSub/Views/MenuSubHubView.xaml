@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:acview="clr-namespace:Aksl.ActiveContents.Views;assembly=Aksl.ActiveContents"
+             xmlns:acviews="clr-namespace:Aksl.ActiveContents.Views;assembly=Aksl.ActiveContents"
              xmlns:inf="clr-namespace:Aksl.Infrastructure;assembly=Aksl.Infrastructure"
              xmlns:views="clr-namespace:Aksl.Modules.MenuSub.Views"
              mc:Ignorable="d"
@@ -45,18 +45,31 @@
                 BorderThickness="2"
                 CornerRadius="5" Grid.Row="2"
                 BorderBrush="Black">-->
-        <acview:RandomActiveContentView  Grid.Row="2"
+        <acviews:RandomActiveContentView Grid.Row="2" ActiveBackground="White"
                                          DataContext="{Binding Path=BottomActiveContentViewModel}"
                                          Margin="2">
-            <acview:RandomActiveContentView.RenderTransform>
+            <acviews:RandomActiveContentView.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform />
                     <SkewTransform />
                     <RotateTransform />
                     <TranslateTransform />
                 </TransformGroup>
-            </acview:RandomActiveContentView.RenderTransform>
-        </acview:RandomActiveContentView>
+            </acviews:RandomActiveContentView.RenderTransform>
+        </acviews:RandomActiveContentView>
+        <!--<acviews:ActiveContentItemView x:Name="MenuSubActiveContentView"
+                                       Grid.Row="2"
+                                       Margin="2"
+                                       DataContext="{Binding Path=BottomActiveContentViewModel.SelectedContentItem}">
+            <ContentControl.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
+                </TransformGroup>
+            </ContentControl.RenderTransform>
+        </acviews:ActiveContentItemView>-->
         <!--</Border>-->
     </Grid>
 

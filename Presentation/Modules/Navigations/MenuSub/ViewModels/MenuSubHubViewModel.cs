@@ -2,6 +2,7 @@
 using Aksl.Dialogs.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
+using Aksl.TabStrip.ViewModels;
 using Prism;
 using Prism.Events;
 using Prism.Ioc;
@@ -131,7 +132,7 @@ namespace Aksl.Modules.MenuSub.ViewModels
 
         #region Create HierarchicalMenus ViewModel Method
         private Aksl.Infrastructure.MenuItem _rootMenuItem;
-        private async Task CreateHierarchicalMenusViewModel(MenuItem rootMenuItem)
+        private async Task CreateHierarchicalMenusViewModelAsync(MenuItem rootMenuItem)
         {
             try
             {
@@ -193,15 +194,10 @@ namespace Aksl.Modules.MenuSub.ViewModels
             var parameters = navigationContext.Parameters;
             if (parameters.TryGetValue("CurrentMenuItem", out MenuItem currentMenuItem))
             {
-                //  WorkspaceRegionName = currentMenuItem.WorkspaceRegionName;
-                //_workspaceViewEventName = currentMenuItem.WorkspaceViewEventName;
-
                 ActiveContentName = currentMenuItem.ActiveContentName;
                 RegisterActiveContent();
 
-               // RegisterBuildWorkspaceViewEvents();
-
-                CreateHierarchicalMenusViewModel(currentMenuItem).Await();
+                CreateHierarchicalMenusViewModelAsync(currentMenuItem).Await();
             }
         }
 

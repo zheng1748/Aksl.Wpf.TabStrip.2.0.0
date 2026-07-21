@@ -22,7 +22,7 @@
                                                  HorizontalAlignment="Center"
                                                  VerticalAlignment="Center" />
                         <TextBlock 
-                                   Text="{Binding Path=Title,Mode=OneWay}"
+                                   Text="{Binding Path=Title,Mode=OneWay}" Width="150"
                                    Margin="10,0,0,0"
                                    VerticalAlignment="Center"
                                    TextTrimming="CharacterEllipsis"
@@ -31,8 +31,8 @@
                         <materialDesign:PackIcon  DockPanel.Dock="Right"
                                                   Width="24"
                                                   Height="24"
-                                                  Visibility="{Binding Path=IsNavigationToRightContent,Converter={StaticResource booleanToVisibilityConverter}}"
-                                                  Kind="ArrowRightThick"
+                                                  Visibility="{Binding Path=IsShowArrow,Converter={StaticResource booleanToVisibilityConverter}}"
+                                                  Kind="ArrowRightThin"
                                                   HorizontalAlignment="Right"
                                                   VerticalAlignment="Center"
                                                   Margin="60,1,1,1" />

@@ -1,21 +1,25 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Input;
-using System.Threading.Tasks;
-
+﻿using Aksl.ActiveContents;
+using Aksl.ActiveContents.ViewModels;
+using Aksl.Infrastructure;
+using Aksl.Infrastructure.Events;
+using Aksl.TabStrip;
+using Aksl.TabStrip.ViewModels;
+using Aksl.Toolkit.Controls;
 using Prism;
 using Prism.Commands;
+using Prism.Common;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Unity;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using Unity;
-
-using Aksl.Infrastructure;
-using Aksl.Infrastructure.Events;
-using Aksl.Toolkit.Controls;
 
 namespace Aksl.Modules.MenuSub.ViewModels
 {
@@ -77,10 +81,10 @@ namespace Aksl.Modules.MenuSub.ViewModels
             set => SetProperty(ref field, value);
         } = false;
 
-       public bool IsAddViewToBottomContent() =>
+       public bool IsAddViewToBottomContent =>
                           !_menuItem.HasNextSubMenu() && _menuItem.HasViewName() && !_menuItem.IsNexApplication;
 
-        public bool IsNavigationToBottomContent() =>
+        public bool IsNavigationToBottomContent =>
                           _menuItem.HasNextSubMenu() && _menuItem.HasViewName() && _menuItem.IsNexApplication;
 
         public bool IsSelected
@@ -106,12 +110,13 @@ namespace Aksl.Modules.MenuSub.ViewModels
                         IsChecked = field;
                     }
 
-                    if (IsLeaf && field && IsAddViewToBottomContent())
+                    if (IsLeaf && field && IsAddViewToBottomContent)
                     {
-                        AddViewToBottomContent();
+                        //AddViewToBottomContent();
+                        AddViewToRightTabContentAsync(_menuItem).Await();
                     }
 
-                    if (IsLeaf && field && IsNavigationToBottomContent())
+                    if (IsLeaf && field && IsNavigationToBottomContent)
                     {
                         NavigationToBottomContent();
                     }
@@ -166,12 +171,139 @@ namespace Aksl.Modules.MenuSub.ViewModels
         }
         #endregion
 
+        #region Add View To Right TabContent Method
+        private async Task AddViewToRightTabContentAsync(MenuItem menuItem)
+        {
+            var dialogViewService = PrismUnityExtensions.GetDialogViewService();
+
+            try
+            {
+                var randomActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<RandomActiveContentViewModel>(name: this.ActiveContentName);
+
+               // NavigationParameters navigationParameters = new() { { "CurrentMenuItem", menuItem } };
+
+                ContentInformation contentInformation = new()
+                {
+                    Name = menuItem.Name,
+                    Title = menuItem.Title,
+                    ViewName = menuItem.ViewName
+                };
+
+                var currentView = randomActiveContentViewModel.GetStoreViewElementByName(menuItem.Name);
+                if (currentView is not null)
+                {
+                    if (menuItem.IsCacheable)
+                    {
+                        // activeContentViewModel.SetContentItem(contentInformation);
+                        randomActiveContentViewModel.SetActiveContentItemByName(menuItem.Name);
+                    }
+                    else
+                    {
+                      //  ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
+                        randomActiveContentViewModel.RetsetContentItem(contentInformation);
+                    }
+                }
+                else
+                {
+                   // ActiveContents.ContentInformation contentInformation = CreateContentInformation(menuItem, navigationParameters);
+                    randomActiveContentViewModel.Add(contentInformation);
+                }
+            }
+            catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
+            {
+                await dialogViewService.AlertAsync(message: $"{ex.InnerException.Message}", title: $"Error:Add View In MenuSub");
+            }
+            catch (Exception ex)
+            {
+                await dialogViewService.AlertAsync(message: $"{ex.Message}", title: $"Error:Add View In MenuSub");
+            }
+        }
+        #endregion
+
+        #region Create ContentInformation Methods
+        public ContentInformation CreateContentInformation(string name, string title, string viewTypeAssemblyQualifiedName, NavigationParameters navigationParameters = null)
+        {
+            Type viewType = Type.GetType(viewTypeAssemblyQualifiedName);
+            if (viewType is null)
+            {
+                throw new ArgumentException($"Missing Type {viewTypeAssemblyQualifiedName}");
+            }
+            var viewName = viewType.Name;
+
+            var unityContainer = PrismIocExtensions.GetUnityContainer();
+            var regionNavigationService = unityContainer.Resolve<IRegionNavigationService>();
+
+            ContentInformation contentInformation = new()
+            {
+                Name = name,
+                Title = title,
+                ViewName = viewTypeAssemblyQualifiedName
+            };
+
+            var registeredView = unityContainer.Resolve<object>(viewName);
+            if (registeredView is FrameworkElement frameworkElement)
+            {
+                MvvmHelpers.AutowireViewModel(registeredView);
+
+                NavigationContext navigationContext = new(regionNavigationService, new Uri(viewName, UriKind.RelativeOrAbsolute));
+                navigationContext.Parameters = navigationParameters;
+
+                Action<INavigationAware> action = (n) => n.OnNavigatedTo(navigationContext);
+                MvvmHelpers.ViewAndViewModelAction<INavigationAware>(registeredView, action);
+
+                contentInformation.ViewName = null;
+                contentInformation.ViewElement = frameworkElement;
+            }
+
+            return contentInformation;
+        }
+
+        public ContentInformation CreateContentInformation(Infrastructure.MenuItem menuItem, NavigationParameters navigationParameters = null)
+        {
+            //  CreateContentInformation(menuItem.Name, menuItem.Title, menuItem.ViewName, navigationParameters);
+
+            var viewName = menuItem.GetViewTypeName();
+
+            var unityContainer = PrismIocExtensions.GetUnityContainer();
+            var regionNavigationService = unityContainer.Resolve<IRegionNavigationService>();
+
+            ContentInformation contentInformation = new()
+            {
+                Name = menuItem.Name,
+                Title = menuItem.Title,
+                ViewName = menuItem.ViewName
+            };
+
+            var registeredView = unityContainer.Resolve<object>(viewName);
+            if (registeredView is FrameworkElement frameworkElement)
+            {
+                MvvmHelpers.AutowireViewModel(registeredView);
+
+                //if (navigationParameters is null)
+                //{
+                //    navigationParameters = new() { { "CurrentMenuItem", menuItem } };
+                //}
+
+                NavigationContext navigationContext = new(regionNavigationService, new Uri(viewName, UriKind.RelativeOrAbsolute));
+                navigationContext.Parameters = navigationParameters;
+
+                Action<INavigationAware> action = (n) => n.OnNavigatedTo(navigationContext);
+                MvvmHelpers.ViewAndViewModelAction<INavigationAware>(registeredView, action);
+
+                contentInformation.ViewName = null;
+                contentInformation.ViewElement = frameworkElement;
+            }
+
+            return contentInformation;
+        }
+        #endregion
+
         #region Add View To BottomContent Method
         public void AddViewToBottomContent()
         {
             var dialogViewService = PrismUnityExtensions.GetDialogViewService();
 
-            ActiveContentManagerExtensions.AddViewToRandomContentAsync(_menuItem, this.ActiveContentName).Await(completedCallback: null, configureAwait: true, errorCallback: (ex) =>
+            ActiveContentManagerExtensions.AddViewToRandomContentAsync(_menuItem, this.ActiveContentName).Await(completedCallback: null, configureAwait:false, errorCallback: (ex) =>
             {
                 System.Windows.Application.Current?.Dispatcher.Invoke(async () =>
                 {
@@ -186,7 +318,7 @@ namespace Aksl.Modules.MenuSub.ViewModels
         {
             var dialogViewService = PrismUnityExtensions.GetDialogViewService();
 
-            ActiveContentManagerExtensions.NavigationToRandomContentAsync(_menuItem, this.ActiveContentName, new() { { "CurrentMenuItem", _menuItem } }).Await(completedCallback: null, configureAwait: true, errorCallback: (ex) =>
+            ActiveContentManagerExtensions.NavigationToRandomContentAsync(_menuItem, this.ActiveContentName, new() { { "CurrentMenuItem", _menuItem } }).Await(completedCallback: null, configureAwait: false, errorCallback: (ex) =>
             {
                 System.Windows.Application.Current?.Dispatcher.Invoke(async () =>
                 {

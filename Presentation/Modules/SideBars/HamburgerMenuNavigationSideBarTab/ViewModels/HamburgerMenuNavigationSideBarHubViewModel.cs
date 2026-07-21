@@ -155,8 +155,8 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBarTab.ViewModels
             RegisterRightTabStrip();
             void RegisterRightTabStrip()
             {
-                _container.RegisterSingleton(from: typeof(TabViewModel), to: typeof(TabViewModel), name: ActiveContentNames.TabStripHamburgerMenuNavigationSideBar);
-                var tabStripViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuNavigationSideBar);
+                _container.RegisterSingleton(from: typeof(TabViewModel), to: typeof(TabViewModel), name: ActiveContentNames.TabStripHamburgerMenuNavigationSideBarRightContent);
+                var tabStripViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuNavigationSideBarRightContent);
 
                 TabStripViewModel = tabStripViewModel;
             }

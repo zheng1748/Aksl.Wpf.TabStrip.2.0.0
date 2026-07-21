@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 using Unity;
 using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
@@ -59,6 +60,8 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
                        _menuItem.HasNextSubMenu();
     public bool HasViewName =>
                        _menuItem.HasViewName();
+    public bool IsShowArrow =>
+              IsNavigationToRightTabContent || IsAddViewsToRightTabContent;
     public bool IsNavigationToRightTabContent =>
                             IsLeaf && _menuItem.HasNextSubMenu() && _menuItem.HasViewName() && _menuItem.IsNexApplication;
     public bool IsAddViewsToRightTabContent =>
@@ -111,11 +114,11 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
     #endregion
 
     #region Add View To Right TabContent Method
-    private async Task AddViewToRightTabContentAsync(MenuItem menuItem)
+    private async Task AddViewToRightTabContentAsync(MenuItem menuItem, string activeContentName = ActiveContentNames.TabStripHamburgerMenuSideBarRightContent)
     {
         try
         {
-            var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuSideBar);
+            var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: activeContentName);
             if (topTabViewModel.IsActiveTabItemByName(menuItem.Name))
             {
                 return;
@@ -148,11 +151,13 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
                 topTabViewModel.Add(tabInfo);
             }
         }
+        catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
+        {
+            await _dialogViewService.AlertAsync(message: $"{ex.InnerException.Message}", title: $"Error:Add Tab View");
+        }
         catch (Exception ex)
         {
-            string msg = !string.IsNullOrEmpty(ex.InnerException?.Message) ? ex.InnerException.Message : ex.Message;
-
-            await _dialogViewService.AlertAsync(message: $"Unable to find \"{msg}\".", title: $"Error:Missing Type");
+            await _dialogViewService.AlertAsync(message: $"{ex.Message}", title: $"Error:Add Tab View");
         }
     }
 
@@ -197,25 +202,35 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
     #endregion
 
     #region Add Views To RightTab Method
-
-    public async Task AddViewsToRightTabContentAsync(MenuItem menuItem)
+    public async Task AddViewsToRightTabContentAsync(MenuItem menuItem,string activeContentName= ActiveContentNames.TabStripHamburgerMenuSideBarRightContent)
     {
-        var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuSideBar);
-        if (topTabViewModel.IsActiveTabItemByName(menuItem.Name))
+        try
         {
-            return;
-        }
+            var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: activeContentName);
+            if (topTabViewModel.IsActiveTabItemByName(menuItem.Name))
+            {
+                return;
+            }
 
-        var topTabView = topTabViewModel.GetStoreViewElementByName(menuItem.Name) as TabView;
-        if (topTabView is null)
-        {
-            CreateTopTabView(menuItem, topTabViewModel);
-            await AddSubTabViewAsync(menuItem, topTabViewModel);
+            var topTabView = topTabViewModel.GetStoreViewElementByName(menuItem.Name) as TabView;
+            if (topTabView is null)
+            {
+                CreateTopTabView(menuItem, topTabViewModel);
+                await AddSubTabViewAsync(menuItem, topTabViewModel);
+            }
+            else
+            {
+                CreateTopTabView(menuItem, topTabViewModel);
+                await AddSubTabViewAsync(menuItem, topTabViewModel);
+            }
         }
-        else
+        catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
         {
-            CreateTopTabView(menuItem, topTabViewModel);
-            await AddSubTabViewAsync(menuItem, topTabViewModel);
+            await _dialogViewService.AlertAsync(message: $"{ex.InnerException.Message}", title: $"Error:Add Tab Views");
+        }
+        catch (Exception ex)
+        {
+            await _dialogViewService.AlertAsync(message: $"{ex.Message}", title: $"Error:Add Tab Views");
         }
     }
 
@@ -387,11 +402,11 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
     #endregion
 
     #region Navigation To RightTabContent Method
-    public async Task NavigationToRightTabContentAsync(MenuItem menuItem)
+    public async Task NavigationToRightTabContentAsync(MenuItem menuItem, string activeContentName = ActiveContentNames.TabStripHamburgerMenuSideBarRightContent)
     {
         try
         {
-            var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: ActiveContentNames.TabStripHamburgerMenuSideBar);
+            var topTabViewModel = PrismIocExtensions.GetUnityContainer().Resolve<TabViewModel>(name: activeContentName);
             if (topTabViewModel.IsActiveTabItemByName(menuItem.Name))
             {
                 return;
@@ -418,11 +433,11 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
         }
         catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
         {
-            await _dialogViewService.AlertAsync(message: $"{ex.InnerException.Message}", title: $"Error:Add Tab View");
+            await _dialogViewService.AlertAsync(message: $"{ex.InnerException.Message}", title: $"Error: Navigation To TabContent");
         }
         catch (Exception ex)
         {
-            await _dialogViewService.AlertAsync(message: $"{ex.Message}", title: $"Error:Add Tab View");
+            await _dialogViewService.AlertAsync(message: $"{ex.Message}", title: $"Error:Navigation To TabContent");
         }
     }
     #endregion
@@ -465,28 +480,6 @@ public class HamburgerMenuSideBarItemViewModel : Mvvm.NodeViewModel
         }
 
         return tabInfo;
-    }
-    #endregion
- 
-    #region Set LeftPane Active ContentItem Method
-    public void SetLeftPaneActiveContentItem()
-    {
-        var leftPaneActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<SequenceActiveContentViewModel>(name: ActiveContentNames.LeftPaneHamburgerMenuSideBar);
-
-        if (leftPaneActiveContentViewModel.ContainItemByName(this.Path))
-        {
-            leftPaneActiveContentViewModel.SetContentItemByName(this.Path);
-        }
-        else
-        {
-            HamburgerMenuSideBarHelper.AddViewsToLeftPaneAsync(this).Await(completedCallback: null, configureAwait: true, errorCallback: (ex) =>
-            {
-                System.Windows.Application.Current?.Dispatcher.Invoke(async () =>
-                {
-                    await _dialogViewService.AlertAsync(message: $"{ex.Message} \".", title: $"Error:Add View To LeftContent");
-                });
-            });
-        }
     }
     #endregion
 }

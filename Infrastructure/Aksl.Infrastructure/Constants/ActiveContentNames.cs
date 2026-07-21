@@ -12,10 +12,10 @@
         public const string LeftPaneHamburgerMenuNavigationSideBar = "LeftPaneHamburgerMenuNavigationSideBarActiveContentViewModel";
         public const string RightContentHamburgerMenuNavigationSideBar = "RightContentHamburgerMenuNavigationSideBarActiveContentViewModel";
 
-        public const string RightContentHamburgerMenuTreeSideBar = "RightContentHamburgerMenuTreeSideBarView";
+      //  public const string RightContentHamburgerMenuTreeSideBar = "RightContentHamburgerMenuTreeSideBarView";
 
-        public const string TabStripHamburgerMenuSideBar = "TabStripHamburgerMenuSideBarViewModel";
-        public const string TabStripHamburgerMenuNavigationSideBar = "TabStripHamburgerMenuNavigationSideBarViewModel";
-        public const string TabStripHamburgerMenuTreeSideBar = "TabStripHamburgerMenuTreeSideBarViewModel";
+        public const string TabStripHamburgerMenuSideBarRightContent = "TabStripHamburgerMenuSideBar.RightContent";
+        public const string TabStripHamburgerMenuNavigationSideBarRightContent = "TabStripHamburgerMenuNavigationSideBar.RightContent";
+        public const string TabStripHamburgerMenuTreeSideBarRightContent = "TabStripHamburgerMenuTreeSideBar.RightContent";
     }
 }
