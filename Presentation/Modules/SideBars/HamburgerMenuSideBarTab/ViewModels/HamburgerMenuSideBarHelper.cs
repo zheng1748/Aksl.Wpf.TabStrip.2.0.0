@@ -52,7 +52,7 @@ public static class HamburgerMenuSideBarHelper
     #region Add Views To LeftPane Method
     public static async Task AddViewsToLeftPaneAsync(HamburgerMenuSideBarItemViewModel topSideBarItem)
     {
-        var leftPaneActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<SequenceActiveContentViewModel>(name: ActiveContentNames.LeftPaneHamburgerMenuSideBar);
+        var leftPaneActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<SequenceActiveContentViewModel>(name: ActiveContentNames.HamburgerMenuSideBarLeftPane);
         NodeResolver<HamburgerMenuSideBarItemViewModel> nodeResolver = new();
 
         // var sublLeafMenuItems = await topuSideBarItem.GetSubMenuAsync();

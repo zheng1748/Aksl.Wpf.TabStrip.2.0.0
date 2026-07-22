@@ -4,17 +4,13 @@ using Aksl.TabStrip;
 using Aksl.TabStrip.ViewModels;
 using Aksl.TabStrip.Views;
 using Aksl.Toolkit.Controls;
-using Prism;
-using Prism.Commands;
 using Prism.Common;
 using Prism.Events;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Unity;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -159,32 +155,33 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
                     return;
                 }
 
-                var viewTypeName = menuItem.GetViewTypeName();
+                TabStripManager.Instance.AddViewToTabContent(menuItem, topTabViewModel);
+                //var viewTypeName = menuItem.GetViewTypeName();
 
-                TabInformation tabInfo = new()
-                {
-                    Name = menuItem.Name,
-                    Title = menuItem.Title,
-                    IconKind = menuItem.IconKind,
-                    ViewName = menuItem.ViewName
-                };
+                //TabInformation tabInfo = new()
+                //{
+                //    Name = menuItem.Name,
+                //    Title = menuItem.Title,
+                //    IconKind = menuItem.IconKind,
+                //    ViewName = menuItem.ViewName
+                //};
 
-                var currentView = topTabViewModel.GetStoreViewElementByName(menuItem.Name);
-                if (currentView is not null)
-                {
-                    if (menuItem.IsCacheable)
-                    {
-                        topTabViewModel.SetTabItem(tabInfo);
-                    }
-                    else
-                    {
-                        topTabViewModel.RetsetTabItem(tabInfo);
-                    }
-                }
-                else
-                {
-                    topTabViewModel.Add(tabInfo);
-                }
+                //var currentView = topTabViewModel.GetStoreViewElementByName(menuItem.Name);
+                //if (currentView is not null)
+                //{
+                //    if (menuItem.IsCacheable)
+                //    {
+                //        topTabViewModel.SetTabItem(tabInfo);
+                //    }
+                //    else
+                //    {
+                //        topTabViewModel.RetsetTabItem(tabInfo);
+                //    }
+                //}
+                //else
+                //{
+                //    topTabViewModel.Add(tabInfo);
+                //}
             }
             catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
             {
@@ -247,17 +244,19 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
                     return;
                 }
 
-                var topTabView = topTabViewModel.GetStoreViewElementByName(menuItem.Name) as TabView;
-                if (topTabView is null)
-                {
-                    CreateTopTabView(menuItem, topTabViewModel);
-                    await AddSubTabViewAsync(menuItem, topTabViewModel);
-                }
-                else
-                {
-                    CreateTopTabView(menuItem, topTabViewModel);
-                    await AddSubTabViewAsync(menuItem, topTabViewModel);
-                }
+                await TabStripManager.Instance.AddViewsTotTabContentAsync(menuItem, topTabViewModel);
+
+                //var topTabView = topTabViewModel.GetStoreViewElementByName(menuItem.Name) as TabView;
+                //if (topTabView is null)
+                //{
+                //    CreateTopTabView(menuItem, topTabViewModel);
+                //    await AddSubTabViewAsync(menuItem, topTabViewModel);
+                //}
+                //else
+                //{
+                //    CreateTopTabView(menuItem, topTabViewModel);
+                //    await AddSubTabViewAsync(menuItem, topTabViewModel);
+                //}
             }
             catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
             {
@@ -447,24 +446,26 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
                     return;
                 }
 
-                TabInformation tabInfo = CreateTabInformation(menuItem.Name, menuItem.Title, menuItem.ViewName, new() { { "CurrentMenuItem", _menuItem } });
+                 TabStripManager.Instance.NavigationToTabContent(menuItem, topTabViewModel);
 
-                var currentView = topTabViewModel.GetStoreViewElementByName(menuItem.Name);
-                if (currentView is not null)
-                {
-                    if (menuItem.IsCacheable)
-                    {
-                        topTabViewModel.SetTabItem(tabInfo);
-                    }
-                    else
-                    {
-                        topTabViewModel.RetsetTabItem(tabInfo);
-                    }
-                }
-                else
-                {
-                    topTabViewModel.Add(tabInfo);
-                }
+                //TabInformation tabInfo = CreateTabInformation(menuItem.Name, menuItem.Title, menuItem.ViewName, new() { { "CurrentMenuItem", _menuItem } });
+
+                //var currentView = topTabViewModel.GetStoreViewElementByName(menuItem.Name);
+                //if (currentView is not null)
+                //{
+                //    if (menuItem.IsCacheable)
+                //    {
+                //        topTabViewModel.SetTabItem(tabInfo);
+                //    }
+                //    else
+                //    {
+                //        topTabViewModel.RetsetTabItem(tabInfo);
+                //    }
+                //}
+                //else
+                //{
+                //    topTabViewModel.Add(tabInfo);
+                //}
             }
             catch (Exception ex) when (!string.IsNullOrEmpty(ex.InnerException?.Message))
             {

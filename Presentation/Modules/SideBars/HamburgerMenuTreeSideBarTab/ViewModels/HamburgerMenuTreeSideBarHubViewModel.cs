@@ -115,28 +115,9 @@ namespace Aksl.Modules.HamburgerMenuTreeSideBarTab.ViewModels
                     TreeSideBarItemViewModel virtualParent = new();
                     Func<MenuItem, TreeSideBarItemViewModel, TreeSideBarItemViewModel> childResolver = ((m, p) => { return new TreeSideBarItemViewModel(m, p); });
                     var topItem = await nodeResolver.GetTopItemByMenuItemAsync(smi, virtualParent, childResolver, false);
-                    //topTreeSideBarItems.Add(topItem);
                     TreeSideBar.TopTreeSideBarItems.Add(topItem);
                 }
 
-                //TreeSideBar = new()
-                //{
-                //    TopTreeSideBarItems = new(topTreeSideBarItems)
-                //};
-
-                //TreeSideBar = new(_eventAggregator, _menuService);
-                //TreeSideBar.PropertyChanged += (sender, e) =>
-                //{
-                //    if (sender is TreeSideBarViewModel tvm)
-                //    {
-                //        if (e.PropertyName == nameof(TreeSideBarViewModel.IsLoading) && !tvm.IsLoading)
-                //        {
-                //            IsLoading = false;
-                //        }
-                //    }
-                //};
-
-                // await TreeSideBar.CreateTreeSideBarItemViewModelsAsync();
                 TreeSideBar.SetPropertyChanged();
                 RaisePropertyChanged(nameof(TreeSideBar));
             }

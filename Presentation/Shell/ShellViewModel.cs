@@ -48,7 +48,7 @@ namespace Aksl.Modules.Shell.ViewModels
         #endregion
 
         #region Properties
-        public RandomActiveContentViewModel ShellContentActiveContentViewModel
+        public RandomActiveContentViewModel ShellActiveContentViewModel
         {
             get;
             set => SetProperty<RandomActiveContentViewModel>(ref field, value);
@@ -83,14 +83,14 @@ namespace Aksl.Modules.Shell.ViewModels
                     //var hamburgerMenuSideBarHubView = ShellContentActiveContentViewModel.GetStoreViewElementByName("HamburgerMenuSideBarHubView") as HamburgerMenuSideBarHubView;
                     //var hamburgerMenuSideBarHubViewModel = hamburgerMenuSideBarHubView.DataContext as HamburgerMenuSideBarHubViewModel;
 
-                  // ShellContentActiveContentViewModel.SetActiveContentItemByName("HamburgerMenuSideBarHubView");
-                   //ShellContentActiveContentViewModel.SetActiveContentItemByName("HamburgerMenuNavigationSideBarHubView");
-                   ShellContentActiveContentViewModel.SetActiveContentItemByName("HamburgerMenuTreeSideBarHubView");
+                    //ShellActiveContentViewModel.SetActiveContentItemByName("HamburgerMenuSideBarHubView");
+                    //ShellActiveContentViewModel.SetActiveContentItemByName("HamburgerMenuNavigationSideBarHubView");
+                    ShellActiveContentViewModel.SetActiveContentItemByName("HamburgerMenuTreeSideBarHubView");
                 }
                 else
                 {
-                    //ShellContentActiveContentViewModel.RetsetContentItemByName("LoginView");
-                    ShellContentActiveContentViewModel.ClearSelectedItem();
+                    //ShellActiveContentViewModel.RetsetContentItemByName("LoginView");
+                    ShellActiveContentViewModel.ClearSelectedItem();
                 }
             }, ThreadOption.UIThread, true);
         }
@@ -103,7 +103,7 @@ namespace Aksl.Modules.Shell.ViewModels
             {
                 if (atee.IsExpired)
                 {
-                    ShellContentActiveContentViewModel.RetsetContentItemByName("LoginView");
+                    ShellActiveContentViewModel.RetsetContentItemByName("LoginView");
 
                     var loginStatusView = LoginActiveContentViewModel.GetStoreViewElementByName("LoginStatusView") as LoginStatusView;
                     var loginStatusViewModel = loginStatusView.DataContext as LoginStatusViewModel;
@@ -119,12 +119,12 @@ namespace Aksl.Modules.Shell.ViewModels
             try
             {
                 _container.RegisterSingleton(from: typeof(RandomActiveContentViewModel), to: typeof(RandomActiveContentViewModel), name: ActiveContentNames.ShellContent);
-                ShellContentActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<RandomActiveContentViewModel>(name: ActiveContentNames.ShellContent);
+                ShellActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<RandomActiveContentViewModel>(name: ActiveContentNames.ShellContent);
 
                 RegisterShellContentActiveContent();
                 void RegisterShellContentActiveContent()
                 {
-                    ShellContentActiveContentViewModel.Add(new()
+                    ShellActiveContentViewModel.Add(new()
                     {
                         Name = "LoginView",
                         Title = "LoginView",
@@ -132,26 +132,26 @@ namespace Aksl.Modules.Shell.ViewModels
                         //ViewElement = new LoginView(),
                     }, true);
 
-                    ShellContentActiveContentViewModel.Add(new()
-                    {
-                        Name = "HamburgerMenuSideBarHubView",
-                        Title = "HamburgerMenuSideBarHubView",
-                        ViewName = "Aksl.Modules.HamburgerMenuSideBarTab.Views.HamburgerMenuSideBarHubView,Aksl.Modules.HamburgerMenuSideBarTab",
-                    }, false);
+                    //ShellContentActiveContentViewModel.Add(new()
+                    //{
+                    //    Name = "HamburgerMenuSideBarHubView",
+                    //    Title = "HamburgerMenuSideBarHubView",
+                    //    ViewName = "Aksl.Modules.HamburgerMenuSideBarTab.Views.HamburgerMenuSideBarHubView,Aksl.Modules.HamburgerMenuSideBarTab",
+                    //}, false);
 
-                    ShellContentActiveContentViewModel.Add(new()
-                    {
-                        Name = "HamburgerMenuNavigationSideBarHubView",
-                        Title = "HamburgerMenuNavigationSideBarHubView",
-                        ViewName = "Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views.HamburgerMenuNavigationSideBarHubView,Aksl.Modules.HamburgerMenuNavigationSideBarTab"
-                    }, false);
+                    //ShellContentActiveContentViewModel.Add(new()
+                    //{
+                    //    Name = "HamburgerMenuNavigationSideBarHubView",
+                    //    Title = "HamburgerMenuNavigationSideBarHubView",
+                    //    ViewName = "Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views.HamburgerMenuNavigationSideBarHubView,Aksl.Modules.HamburgerMenuNavigationSideBarTab"
+                    //}, false);
 
-                    ShellContentActiveContentViewModel.Add(new()
-                    {
-                        Name = "HamburgerMenuTreeSideBarHubView",
-                        Title = "HamburgerMenuTreeSideBarHubView",
-                        ViewName = "Aksl.Modules.HamburgerMenuTreeSideBarTab.Views.HamburgerMenuTreeSideBarHubView,Aksl.Modules.HamburgerMenuTreeSideBarTab"
-                    }, false);
+                    //ShellContentActiveContentViewModel.Add(new()
+                    //{
+                    //    Name = "HamburgerMenuTreeSideBarHubView",
+                    //    Title = "HamburgerMenuTreeSideBarHubView",
+                    //    ViewName = "Aksl.Modules.HamburgerMenuTreeSideBarTab.Views.HamburgerMenuTreeSideBarHubView,Aksl.Modules.HamburgerMenuTreeSideBarTab"
+                    //}, false);
                 }
 
                 RegisterLoginActiveContent();

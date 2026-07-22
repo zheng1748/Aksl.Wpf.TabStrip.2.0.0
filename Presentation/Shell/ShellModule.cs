@@ -29,21 +29,28 @@ namespace Aksl.Modules.Shell
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            var shellContentActiveContentViewModel = containerProvider.Resolve<RandomActiveContentViewModel>(name: ActiveContentNames.ShellContent);
+            var shellActiveContentViewModel = containerProvider.Resolve<RandomActiveContentViewModel>(name: ActiveContentNames.ShellContent);
 
-            //ActiveContentManager.Instance.RegisterNavigationForRandomContentt(name: "HamburgerMenuNavigationSideBarHubView",
-            //                                          title: "HamburgerMenuNavigationSideBarHubView",
-            //                                           viewTypeAssemblyQualifiedName: "Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views.HamburgerMenuNavigationSideBarHubView,Aksl.Modules.HamburgerMenuNavigationSideBarTab",
-            //                                                                  randomActiveContentViewModel: shellContentActiveContentViewModel,
-            //                                                                  navigationParameters: new() { { "ActiveContentName", "RightContent.HamburgerMenuNavigationSideBarTab" } },
-            //                                                                  isActive: false);
+            ActiveContentManager.Instance.RegisterNavigationForRandomContentt(name: "HamburgerMenuSideBarHubView",
+                                                      title: "HamburgerMenuSideBarHubView",
+                                                      viewTypeAssemblyQualifiedName: "Aksl.Modules.HamburgerMenuSideBarTab.Views.HamburgerMenuSideBarHubView,Aksl.Modules.HamburgerMenuSideBarTab",
+                                                      randomActiveContentViewModel: shellActiveContentViewModel,
+                                                      navigationParameters: new() { { "ActiveContentName", "HamburgerMenuNavigationSideBarTab.RightContent" } },
+                                                      isActive: false);
 
-            //ActiveContentManager.Instance.RegisterNavigationForRandomContentt(name: "HamburgerMenuTreeSideBarHubView",
-            //                                                        title: "HamburgerMenuTreeSideBarHubView",
-            //                                                        viewTypeAssemblyQualifiedName: "Aksl.Modules.HamburgerMenuTreeSideBarTab.Views.HamburgerMenuTreeSideBarHubView,Aksl.Modules.HamburgerMenuTreeSideBarTab",
-            //                                                        randomActiveContentViewModel: shellContentActiveContentViewModel,
-            //                                                        navigationParameters: new() { { "ActiveContentName", "RightContent.HamburgerMenuTreeSideBarTab" } },
-            //                                                        isActive: false);
+            ActiveContentManager.Instance.RegisterNavigationForRandomContentt(name: "HamburgerMenuNavigationSideBarHubView",
+                                                      title: "HamburgerMenuNavigationSideBarHubView",
+                                                       viewTypeAssemblyQualifiedName: "Aksl.Modules.HamburgerMenuNavigationSideBarTab.Views.HamburgerMenuNavigationSideBarHubView,Aksl.Modules.HamburgerMenuNavigationSideBarTab",
+                                                                              randomActiveContentViewModel: shellActiveContentViewModel,
+                                                                              navigationParameters: new() { { "ActiveContentName", "HamburgerMenuNavigationSideBarTab.RightContent" } },
+                                                                              isActive: false);
+
+            ActiveContentManager.Instance.RegisterNavigationForRandomContentt(name: "HamburgerMenuTreeSideBarHubView",
+                                                    title: "HamburgerMenuTreeSideBarHubView",
+                                                    viewTypeAssemblyQualifiedName: "Aksl.Modules.HamburgerMenuTreeSideBarTab.Views.HamburgerMenuTreeSideBarHubView,Aksl.Modules.HamburgerMenuTreeSideBarTab",
+                                                    randomActiveContentViewModel: shellActiveContentViewModel,
+                                                    navigationParameters: new() { { "ActiveContentName", "HamburgerMenuTreeSideBarTab.RightContent" } },
+                                                    isActive: false);
         }
         #endregion
     }

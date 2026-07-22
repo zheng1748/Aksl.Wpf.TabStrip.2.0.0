@@ -497,10 +497,10 @@
                        Height="8"
                        BorderBrush="#193441" />
 
-            <acviews:RandomActiveContentView x:Name="ShellContentActiveContentView"
+            <acviews:RandomActiveContentView x:Name="ShellActiveContentView"
                                        Grid.Row="2"
                                        Margin="1"
-                                       DataContext="{Binding Path=ShellContentActiveContentViewModel}">
+                                             DataContext="{Binding Path=ShellActiveContentViewModel}">
                 <ContentControl.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform />

@@ -128,8 +128,8 @@ namespace Aksl.Modules.HamburgerMenuSideBarTab.ViewModels
             await RegisterLeftPaneActiveContentAsync();
             async Task RegisterLeftPaneActiveContentAsync()
             {
-                _container.RegisterSingleton(from: typeof(SequenceActiveContentViewModel), to: typeof(SequenceActiveContentViewModel), name: ActiveContentNames.LeftPaneHamburgerMenuSideBar);
-                LeftPaneActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<SequenceActiveContentViewModel>(name: ActiveContentNames.LeftPaneHamburgerMenuSideBar);
+                _container.RegisterSingleton(from: typeof(SequenceActiveContentViewModel), to: typeof(SequenceActiveContentViewModel), name: ActiveContentNames.HamburgerMenuSideBarLeftPane);
+                LeftPaneActiveContentViewModel = PrismIocExtensions.GetUnityContainer().Resolve<SequenceActiveContentViewModel>(name: ActiveContentNames.HamburgerMenuSideBarLeftPane);
 
                 await CreateTopHamburgerMenuSideBarViewModelAsync();
                 LeftPaneActiveContentViewModel.Add(new()
